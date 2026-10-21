@@ -1,0 +1,1974 @@
+﻿This is a complete HTML document that creates a multiple-choice quiz on Brazilian public procurement law. It presents 200 questions, each with four options, and provides immediate feedback on whether your answer is correct or incorrect.
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banco de questões · Licitação, Contratos e Convênios</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #f0f4f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 950px;
+      width: 100%;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 20px 35px -8px rgba(0, 20, 50, 0.2);
+      padding: 2rem 2rem 2.5rem;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #0a2942;
+      letter-spacing: -0.02em;
+      border-left: 7px solid #1e6f9f;
+      padding-left: 1.2rem;
+      margin-bottom: 0.6rem;
+      line-height: 1.3;
+    }
+
+    .subtitle {
+      color: #2c4a6e;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      padding-left: 2rem;
+      border-bottom: 1px solid #d9e2ec;
+      padding-bottom: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .subtitle span {
+      background: #e6f0f9;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      font-weight: 500;
+      color: #0a3d62;
+      font-size: 0.9rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #d0dfec;
+      border-radius: 20px;
+      margin: 1.2rem 0 0.8rem;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1e6f9f, #2895c9);
+      width: 0%;
+      border-radius: 20px;
+      transition: width 0.2s ease;
+    }
+
+    .counter {
+      text-align: right;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #3e5f7e;
+      margin-bottom: 1.8rem;
+    }
+
+    .question-card {
+      background: #ffffff;
+      border-radius: 1.5rem;
+      padding: 1.5rem 1.8rem 1.8rem;
+      box-shadow: 0 6px 18px rgba(0, 20, 30, 0.06);
+      border: 1px solid #dde9f2;
+      margin-bottom: 1.5rem;
+    }
+
+    .question-text {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #0c314b;
+      line-height: 1.5;
+      margin-bottom: 1.2rem;
+      background: #f7fafd;
+      padding: 1rem 1.2rem;
+      border-radius: 1rem;
+      border-left: 5px solid #1e6f9f;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      background: #f8fbfe;
+      border: 1.5px solid #cfdfeb;
+      border-radius: 60px;
+      padding: 0.8rem 1.2rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-size: 1rem;
+      color: #1b3b55;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .option:hover {
+      background: #e5f0fa;
+      border-color: #6d9ec9;
+    }
+
+    .option.selected {
+      background: #d9ebf9;
+      border-color: #1e6f9f;
+      box-shadow: 0 0 0 2px rgba(30, 111, 159, 0.2);
+    }
+
+    .option.correct {
+      background: #d4edda;
+      border-color: #1e7b4b;
+      color: #0a3d2a;
+      font-weight: 600;
+    }
+
+    .option.incorrect {
+      background: #f8d7da;
+      border-color: #b02a37;
+      color: #661a24;
+      font-weight: 600;
+    }
+
+    .option input[type="radio"] {
+      appearance: none;
+      width: 1.2rem;
+      height: 1.2rem;
+      border: 2px solid #7c9eb9;
+      border-radius: 50%;
+      display: inline-grid;
+      place-content: center;
+      margin: 0;
+      flex-shrink: 0;
+      transition: 0.1s;
+    }
+
+    .option input[type="radio"]:checked {
+      border-color: #1e6f9f;
+      background: #1e6f9f;
+      box-shadow: inset 0 0 0 3px white;
+    }
+
+    .option input[type="radio"]:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .feedback {
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 0.9rem 1.2rem;
+      border-radius: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.2rem;
+      background: #f2f7fc;
+      border-left: 5px solid #1e6f9f;
+      color: #0a2942;
+    }
+
+    .feedback.correct-fb {
+      background: #e2f3e6;
+      border-left-color: #1e7b4b;
+      color: #0a3d2a;
+    }
+
+    .feedback.incorrect-fb {
+      background: #fce8ea;
+      border-left-color: #b02a37;
+      color: #661a24;
+    }
+
+    .feedback-icon {
+      font-size: 1.3rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      background: #1e6f9f;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: 0.15s;
+      box-shadow: 0 4px 10px rgba(30, 111, 159, 0.3);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #155a84;
+      box-shadow: 0 6px 14px rgba(30, 111, 159, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      background: #a2bdd3;
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .btn-secondary {
+      background: #e1ecf5;
+      color: #1e4b6b;
+      box-shadow: none;
+      border: 1px solid #b3cee2;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #d0e2f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .btn-reset {
+      background: #ffffff;
+      color: #1e4b6b;
+      border: 1.5px solid #b3cee2;
+      box-shadow: none;
+    }
+
+    .btn-reset:hover {
+      background: #f0f7fd;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .stats {
+      font-size: 0.9rem;
+      background: #eaf2f9;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 600;
+      color: #164465;
+    }
+
+    @media (max-width: 550px) {
+      .container {
+        padding: 1.5rem 1rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+        padding-left: 0.8rem;
+      }
+      .subtitle {
+        padding-left: 0.5rem;
+        font-size: 0.9rem;
+      }
+      .option {
+        font-size: 0.9rem;
+        padding: 0.7rem 1rem;
+      }
+      .actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-group {
+        justify-content: center;
+      }
+      .btn {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📚 Licitação, Contratos e Convênios</h1>
+    <div class="subtitle">
+      <span>200 questões · múltipla escolha</span>
+      <span id="statsDisplay" class="stats">✅ 0 acertos · 0 erros</span>
+    </div>
+
+    <!-- barra de progresso -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+    </div>
+    <div class="counter" id="counterText">Questão 1 de 200</div>
+
+    <!-- card da questão -->
+    <div class="question-card">
+      <div class="question-text" id="questionText">Carregando questão...</div>
+      <div class="options" id="optionsContainer"></div>
+      <div class="feedback" id="feedbackArea">
+        <span class="feedback-icon">📌</span>
+        <span id="feedbackMessage">Escolha uma alternativa e clique em “Confirmar”.</span>
+      </div>
+      <div class="actions">
+        <div class="btn-group">
+          <button class="btn" id="confirmBtn" disabled>✅ Confirmar resposta</button>
+          <button class="btn btn-secondary" id="nextBtn" disabled>➡️ Próxima</button>
+          <button class="btn btn-secondary" id="prevBtn" disabled>⬅️ Anterior</button>
+        </div>
+        <button class="btn btn-reset" id="resetBtn">🔄 Reiniciar banco</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ----------------------------------------------------------------
+      // BANCO DE QUESTÕES (200) com 4 alternativas cada
+      // ----------------------------------------------------------------
+      const questions = [
+        // Capítulo 1 - Licitação
+        { q: "Qual é a previsão constitucional para a licitação e qual lei a regulamentava originalmente?",
+          options: [
+            "Art. 37, XXI, CF/88; Lei 8.666/93.",
+            "Art. 5º, LIV, CF/88; Lei 8.112/90.",
+            "Art. 22, XXVII, CF/88; Lei 14.133/21.",
+            "Art. 173, §1º, CF/88; Lei 8.666/93."
+          ], correct: 0 },
+        { q: "Quais entes públicos estão subordinados ao regime estabelecido pela Lei n. 8.666/93?",
+          options: [
+            "Apenas os órgãos da Administração Direta da União.",
+            "Órgãos da Administração Direta, fundos especiais, autarquias, fundações públicas e demais entidades controladas direta ou indiretamente.",
+            "Somente as autarquias e fundações públicas federais.",
+            "Empresas públicas e sociedades de economia mista, exclusivamente."
+          ], correct: 1 },
+        { q: "Apresente um conceito de licitação segundo a literatura (Meireles, 2008).",
+          options: [
+            "É o contrato administrativo celebrado após ampla disputa.",
+            "É o procedimento administrativo para selecionar a proposta mais vantajosa, com sucessão ordenada de atos vinculantes e igualdade entre licitantes.",
+            "É o ato unilateral de escolha do fornecedor pela Administração.",
+            "É a fase interna do procedimento de compra pública."
+          ], correct: 1 },
+        { q: "Quais são os dois objetivos principais do procedimento licitatório?",
+          options: [
+            "Reduzir despesas e aumentar a arrecadação.",
+            "Garantir a isonomia e selecionar a proposta mais vantajosa.",
+            "Fiscalizar os licitantes e punir irregularidades.",
+            "Cumprir metas orçamentárias e divulgar os vencedores."
+          ], correct: 1 },
+        { q: "Cite cinco princípios da licitação previstos na Lei n. 8.666/93.",
+          options: [
+            "Legalidade, impessoalidade, moralidade, publicidade, eficiência.",
+            "Legalidade, ampla defesa, contraditório, sigilo, economicidade.",
+            "Isonomia, competitividade, razoabilidade, proporcionalidade, celeridade.",
+            "Publicidade, vinculação, julgamento subjetivo, informalidade, celeridade."
+          ], correct: 0 },
+        { q: "O que significa o princípio da isonomia no contexto da licitação?",
+          options: [
+            "Tratar todos os licitantes de forma absolutamente idêntica, sem qualquer diferenciação.",
+            "Permitir a todos os interessados competir em condições de igualdade, equalizando pessoas e tratamentos conforme suas condições.",
+            "Beneficiar microempresas e empresas de pequeno porte em todas as licitações.",
+            "Exigir que todos os licitantes apresentem as mesmas propostas técnicas."
+          ], correct: 1 },
+        { q: "Defina obra, serviço e compra conforme a Lei n. 8.666/93.",
+          options: [
+            "Obra: aquisição de bens; Serviço: construção; Compra: atividade de demolição.",
+            "Obra: construção, reforma, fabricação, recuperação ou ampliação; Serviço: atividade destinada a obter utilidade; Compra: aquisição remunerada de bens.",
+            "Obra: qualquer serviço de engenharia; Serviço: compra de materiais; Compra: contratação de mão de obra.",
+            "Obra: projeto básico; Serviço: projeto executivo; Compra: execução indireta."
+          ], correct: 1 },
+        { q: "O que é necessário para que uma obra ou serviço seja licitado?",
+          options: [
+            "Apenas a autorização verbal da autoridade competente.",
+            "Projeto básico aprovado, previsão de recursos orçamentários e contemplação nas metas das legislações orçamentárias (PPA, LDO e LOA).",
+            "Basta a existência de dotação no orçamento do ano anterior.",
+            "Somente a publicação do edital no Diário Oficial."
+          ], correct: 1 },
+        { q: "Quem está proibido de participar do certame licitatório?",
+          options: [
+            "Qualquer cidadão maior de 18 anos.",
+            "O autor do projeto, a empresa elaboradora do projeto e o servidor ou dirigente do órgão contratante.",
+            "Apenas empresas com dívidas fiscais.",
+            "Todos os fornecedores que já contrataram com a Administração."
+          ], correct: 1 },
+        { q: "Como é composta a Comissão de Licitação e qual a responsabilidade de seus membros?",
+          options: [
+            "Dois membros, sem responsabilidade solidária.",
+            "No mínimo três membros, sendo pelo menos dois servidores estáveis; respondem solidariamente pelos atos.",
+            "Um servidor efetivo e dois cidadãos comuns, sem responsabilidade.",
+            "Cinco membros, todos comissionados, sem estabilidade."
+          ], correct: 1 },
+        { q: "O que é a \"isonomia do conhecimento\" no procedimento licitatório?",
+          options: [
+            "Período entre a publicação do aviso e a abertura das propostas, para conhecimento das regras do edital.",
+            "Fase de julgamento em que todos os licitantes têm acesso às propostas dos concorrentes.",
+            "Divulgação dos nomes dos vencedores antes da homologação.",
+            "Garantia de que todos os licitantes terão acesso ao projeto básico após a entrega das propostas."
+          ], correct: 0 },
+        { q: "Quais são os prazos mínimos entre a publicação do aviso e a abertura das propostas para concorrência (empreitada integral), tomada de preços (demais casos) e convite?",
+          options: [
+            "30 dias, 15 dias e 5 dias úteis, respectivamente.",
+            "45 dias, 30 dias e 5 dias úteis.",
+            "45 dias, 15 dias e 5 dias úteis.",
+            "30 dias, 30 dias e 10 dias úteis."
+          ], correct: 2 },  // concorrência 45 (empreitada integral) => 45; tomada demais casos 15; convite 5 úteis
+        { q: "Quais são as modalidades de licitação previstas na Lei n. 8.666/93?",
+          options: [
+            "Pregão, concorrência, tomada de preços, convite, concurso e leilão.",
+            "Concorrência, tomada de preços, convite, concurso e leilão.",
+            "Concorrência, pregão, convite, concurso e leilão.",
+            "Tomada de preços, convite, pregão eletrônico, concurso e leilão."
+          ], correct: 1 },
+        { q: "Defina a modalidade concorrência.",
+          options: [
+            "Licitação entre quaisquer interessados que comprovem requisitos mínimos de qualificação na fase de habilitação preliminar.",
+            "Licitação entre interessados cadastrados ou que atendam às condições até o terceiro dia anterior.",
+            "Licitação entre convidados em número mínimo de três.",
+            "Licitação para escolha de trabalho técnico, científico ou artístico."
+          ], correct: 0 },
+        { q: "Defina a modalidade tomada de preços.",
+          options: [
+            "Entre quaisquer interessados, com habilitação preliminar.",
+            "Entre interessados devidamente cadastrados ou que atendam às condições até o terceiro dia anterior ao recebimento das propostas.",
+            "Entre convidados em número mínimo de três.",
+            "Para venda de bens móveis inservíveis."
+          ], correct: 1 },
+        { q: "Defina a modalidade convite.",
+          options: [
+            "Entre quaisquer interessados, com ampla publicidade.",
+            "Entre interessados do ramo, cadastrados ou não, escolhidos e convidados em número mínimo de três.",
+            "Entre interessados cadastrados no SICAF, exclusivamente.",
+            "Para alienação de bens imóveis."
+          ], correct: 1 },
+        { q: "Defina a modalidade concurso.",
+          options: [
+            "Para escolha de trabalho técnico, científico ou artístico, mediante prêmios ou remuneração.",
+            "Para aquisição de bens comuns.",
+            "Para alienação de bens móveis inservíveis.",
+            "Para contratação de obras de grande vulto."
+          ], correct: 0 },
+        { q: "Defina a modalidade leilão.",
+          options: [
+            "Para compra de materiais exclusivos.",
+            "Para venda de bens móveis inservíveis, produtos apreendidos ou penhorados, e alienação de imóveis ao maior lance.",
+            "Para seleção de projetos culturais.",
+            "Para contratação de serviços técnicos especializados."
+          ], correct: 1 },
+        { q: "O que é a contratação direta e quais são suas duas principais formas?",
+          options: [
+            "Procedimento que não contempla licitação; dispensa e inexigibilidade.",
+            "Licitação realizada em caráter emergencial; dispensa e inexigibilidade.",
+            "Contrato verbal com fornecedor; dispensa e inexigibilidade.",
+            "Dispensa de licitação apenas; inexigibilidade não existe."
+          ], correct: 0 },
+        { q: "Qual a diferença entre dispensa e inexigibilidade de licitação?",
+          options: [
+            "Na dispensa há possibilidade de competição, mas a lei faculta a dispensa; na inexigibilidade não há possibilidade de competição.",
+            "Na dispensa não há competição; na inexigibilidade sempre há competição.",
+            "Ambas são sinônimos legais.",
+            "A dispensa depende de autorização judicial; a inexigibilidade é automática."
+          ], correct: 0 },
+        { q: "Cite três hipóteses de dispensa de licitação em razão de situações excepcionais.",
+          options: [
+            "Guerra, emergência ou calamidade pública, licitação deserta.",
+            "Guerra, compra de material de escritório, licitação fracassada.",
+            "Emergência, contratação de artista consagrado, licitação deserta.",
+            "Calamidade, serviços técnicos especializados, licitação fracassada."
+          ], correct: 0 },
+        { q: "O que é uma licitação deserta e como se diferencia de uma fracassada?",
+          options: [
+            "Deserta: não aparecem interessados; fracassada: aparecem, mas nenhum é habilitado ou classificado.",
+            "Deserta: aparecem interessados, mas nenhum classificado; fracassada: não aparecem interessados.",
+            "Deserta: todos são habilitados; fracassada: todos são desclassificados.",
+            "São expressões sinônimas."
+          ], correct: 0 },
+        { q: "Cite três hipóteses de inexigibilidade de licitação previstas no artigo 25 da Lei 8.666/93.",
+          options: [
+            "Fornecedor exclusivo; serviços técnicos especializados com notória especialização; profissional de setor artístico consagrado.",
+            "Guerra, emergência e calamidade pública.",
+            "Licitação deserta, fracassada e valores abaixo do limite.",
+            "Compra de bens comuns, obras de engenharia e serviços de limpeza."
+          ], correct: 0 },
+        { q: "O que é considerado \"notória especialização\" para fins de inexigibilidade?",
+          options: [
+            "Qualquer profissional com registro no conselho de classe.",
+            "Profissional ou empresa cujo conceito, decorrente de desempenho anterior, estudos, publicações, etc., permita inferir que seu trabalho é essencial e indiscutivelmente o mais adequado.",
+            "Empresa com mais de 10 anos de mercado.",
+            "Profissional indicado por autoridade política."
+          ], correct: 1 },
+        { q: "Quais formalidades devem ser observadas na contratação direta por dispensa ou inexigibilidade?",
+          options: [
+            "Apenas a justificativa do preço.",
+            "Caracterização da situação, razão da escolha, justificativa do preço e aprovação dos projetos (se for o caso); publicação em até 5 dias.",
+            "Somente a autorização do chefe do executivo.",
+            "Publicação do extrato no Diário Oficial em até 30 dias."
+          ], correct: 1 },
+        { q: "O que é o Edital e qual sua importância?",
+          options: [
+            "É a peça mais importante do procedimento, com todas as informações relevantes, não podendo surpreender os licitantes.",
+            "É o documento que contém apenas o objeto e o prazo de execução.",
+            "É o contrato assinado com o vencedor.",
+            "É o parecer jurídico que aprova a licitação."
+          ], correct: 0 },
+        { q: "Quais são os documentos de habilitação que o licitante deve apresentar?",
+          options: [
+            "Habilitação jurídica, qualificação técnica, qualificação econômico-financeira, regularidade fiscal e cumprimento do art. 7º, XXXIII, CF.",
+            "Somente a regularidade fiscal.",
+            "Apenas a qualificação técnica.",
+            "Comprovante de residência e identidade."
+          ], correct: 0 },
+        { q: "Quais são os tipos de licitação previstos na Lei n. 8.666/93 para concorrência, tomada de preços e convite?",
+          options: [
+            "Menor preço, melhor técnica e técnica e preço.",
+            "Menor preço, maior lance e melhor técnica.",
+            "Melhor técnica, conteúdo artístico e maior retorno econômico.",
+            "Menor preço e maior desconto apenas."
+          ], correct: 0 },
+        { q: "Em que situações os tipos \"melhor técnica\" ou \"técnica e preço\" devem ser utilizados?",
+          options: [
+            "Exclusivamente para serviços de natureza predominantemente intelectual.",
+            "Para compras de bens comuns.",
+            "Para obras de grande vulto.",
+            "Para alienação de bens imóveis."
+          ], correct: 0 },
+        { q: "Como é feito o desempate entre duas ou mais propostas?",
+          options: [
+            "Por sorteio em ato público, observadas as preferências legais (bens nacionais, microempresas etc.).",
+            "Sempre pelo maior preço.",
+            "Pela ordem de inscrição no edital.",
+            "Por decisão exclusiva do pregoeiro."
+          ], correct: 0 },
+        { q: "O que é a homologação e a adjudicação?",
+          options: [
+            "Homologação: aprovação pela autoridade superior; adjudicação: atribuição do objeto ao vencedor.",
+            "Homologação: assinatura do contrato; adjudicação: publicação do resultado.",
+            "Homologação: julgamento das propostas; adjudicação: habilitação.",
+            "São fases internas da licitação."
+          ], correct: 0 },
+        { q: "O que é o pregão e qual sua principal característica?",
+          options: [
+            "Modalidade para bens e serviços comuns, com inversão das fases (primeiro propostas, depois habilitação).",
+            "Modalidade para obras de engenharia, sem inversão de fases.",
+            "Modalidade restrita a serviços técnicos especializados.",
+            "Modalidade exclusiva para alienações."
+          ], correct: 0 },
+        { q: "O que são bens e serviços comuns para fins de pregão?",
+          options: [
+            "Aqueles cujos padrões de desempenho e qualidade possam ser objetivamente definidos por especificações usuais de mercado.",
+            "Bens de alto valor agregado.",
+            "Serviços de engenharia consultiva.",
+            "Produtos personalizados sob encomenda."
+          ], correct: 0 },
+        { q: "Quem conduz o procedimento licitatório na modalidade pregão?",
+          options: [
+            "O pregoeiro e sua equipe de apoio.",
+            "A comissão permanente de licitação.",
+            "O secretário de administração.",
+            "O ministro da fazenda."
+          ], correct: 0 },
+        { q: "Qual é o prazo mínimo entre a publicação do aviso e a apresentação das propostas no pregão?",
+          options: [
+            "5 dias úteis.",
+            "8 dias.",
+            "10 dias corridos.",
+            "15 dias."
+          ], correct: 1 },
+        { q: "Como funciona a fase de lances no pregão presencial?",
+          options: [
+            "O pregoeiro seleciona a menor proposta e as até 10% superiores; convoca para lances verbais sucessivos.",
+            "Todos os licitantes podem dar apenas um lance.",
+            "Apenas os três primeiros colocados podem dar lances.",
+            "Os lances são enviados por escrito e abertos em sessão pública."
+          ], correct: 0 },
+        { q: "Qual é o único tipo de licitação admitido na modalidade pregão?",
+          options: [
+            "Menor preço.",
+            "Melhor técnica.",
+            "Técnica e preço.",
+            "Maior lance."
+          ], correct: 0 },
+        { q: "Quais condutas são passíveis de punição no pregão?",
+          options: [
+            "Não celebrar o contrato, apresentar documentação falsa, retardar a execução, fraude fiscal, entre outras.",
+            "Apenas deixar de entregar a proposta.",
+            "Somente cometer fraude fiscal.",
+            "Nenhuma, pois o pregão não prevê sanções."
+          ], correct: 0 },
+        { q: "Quais são as penas previstas na Lei n. 10.520/02 para o infrator?",
+          options: [
+            "Impedimento de licitar e contratar; descredenciamento do SICAF por até 5 anos; multas e demais cominações.",
+            "Somente advertência.",
+            "Pena de reclusão de 2 a 4 anos.",
+            "Suspensão por 30 dias."
+          ], correct: 0 },
+        { q: "Quais as vantagens do pregão em relação às modalidades tradicionais (Motta, 2005)?",
+          options: [
+            "Redução de tempo e custos, com inversão de fases, e incremento da concorrência com lances.",
+            "Maior burocracia e menor participação.",
+            "Exigência de projeto básico detalhado.",
+            "Restrição a empresas de grande porte."
+          ], correct: 0 },
+        { q: "O que é o pregão eletrônico e qual sua base normativa?",
+          options: [
+            "Pregão realizado a distância por sistema de internet, regulamentado pelo Decreto 5.450/05.",
+            "Pregão presencial com uso de urnas eletrônicas.",
+            "Modalidade criada pela Lei 14.133/21.",
+            "Pregão realizado exclusivamente para obras públicas."
+          ], correct: 0 },
+        { q: "Quais são as vedações para a utilização do pregão eletrônico?",
+          options: [
+            "Obras de engenharia, locações imobiliárias e alienações em geral.",
+            "Bens de informática e serviços de limpeza.",
+            "Materiais de escritório e serviços de vigilância.",
+            "Apenas alienações de bens móveis."
+          ], correct: 0 },
+        { q: "Como é feito o credenciamento para participar do pregão eletrônico?",
+          options: [
+            "Por atribuição de chave de identificação e senha, dependendo de registro no SICAF.",
+            "Basta comparecer ao órgão no dia da sessão.",
+            "Por indicação de um servidor público.",
+            "Somente com convite formal."
+          ], correct: 0 },
+        { q: "Como funciona o encerramento da sessão de lances no pregão eletrônico?",
+          options: [
+            "O sistema avisa e o encerramento ocorre aleatoriamente em até 30 minutos após o aviso.",
+            "O pregoeiro encerra imediatamente após o último lance.",
+            "Os lances se encerram no horário fixado no edital, sem aviso.",
+            "Somente após 2 horas de disputa."
+          ], correct: 0 },
+        { q: "O que é a fase interna da licitação?",
+          options: [
+            "Fase preparatória que se inicia com a abertura do processo administrativo, incluindo edital, anexos, pareceres etc.",
+            "Fase que se inicia com a publicação do aviso do edital.",
+            "Fase de julgamento das propostas.",
+            "Fase de homologação e adjudicação."
+          ], correct: 0 },
+        { q: "O que é a fase externa da licitação?",
+          options: [
+            "Inicia-se com a convocação dos interessados por meio da publicação do aviso do edital, e compreende habilitação, julgamento, classificação, homologação e adjudicação.",
+            "É a fase de elaboração do edital.",
+            "É a fase de escolha da comissão de licitação.",
+            "É a fase de pagamento dos fornecedores."
+          ], correct: 0 },
+        { q: "Qual é o prazo para impugnação do Edital?",
+          options: [
+            "Até o segundo dia útil que anteceder à abertura dos envelopes de habilitação (concorrência) ou das propostas (convite, tomada de preços, concurso) ou à realização do leilão.",
+            "Até 5 dias antes da abertura das propostas.",
+            "Até 10 dias após a publicação do edital.",
+            "Em qualquer fase do procedimento."
+          ], correct: 0 },
+        { q: "O que é o SICAF e qual sua função?",
+          options: [
+            "Sistema de Cadastramento Unificado de Fornecedores, que cadastra e habilita parcialmente interessados em licitações federais.",
+            "Sistema de Controle de Arrecadação Federal.",
+            "Sistema de Compras de Alimentos.",
+            "Sistema de Cadastro de Servidores Públicos."
+          ], correct: 0 },
+        { q: "O que é o termo de referência e qual sua função?",
+          options: [
+            "Documento que define o objeto com clareza: especificações, quantidades, prazos, critérios de aceitação, obrigações e julgamento.",
+            "Documento que substitui o edital.",
+            "É o contrato preliminar.",
+            "É o parecer jurídico sobre a licitação."
+          ], correct: 0 },
+        { q: "O que é o estudo técnico preliminar (ETP)?",
+          options: [
+            "Documento que mostra a necessidade da contratação, analisa alternativas, estima quantidades e valores e avalia riscos.",
+            "É o orçamento sigiloso da licitação.",
+            "É a proposta do licitante vencedor.",
+            "É o termo de homologação."
+          ], correct: 0 },
+        { q: "Por que a reprodução automática de ETP e TR de outro órgão é inadequada?",
+          options: [
+            "Porque ignora as particularidades do órgão, podendo gerar restrição indevida, impugnações ou execução deficiente.",
+            "Porque é proibida por lei.",
+            "Porque aumenta a competitividade.",
+            "Porque é mais caro para a Administração."
+          ], correct: 0 },
+        { q: "Em que situações a indicação de marca pode ser admitida pela Lei 14.133/21?",
+          options: [
+            "Quando necessária para padronização, compatibilidade com sistema existente ou único meio de atender à necessidade, com justificativa técnica.",
+            "Sempre que o gestor preferir.",
+            "Apenas para bens de luxo.",
+            "Nunca é admitida."
+          ], correct: 0 },
+        { q: "Quais princípios são comprometidos por exigência restritiva sem justificativa técnica?",
+          options: [
+            "Competitividade e economicidade, além de isonomia e eficiência.",
+            "Somente a moralidade.",
+            "Apenas a publicidade.",
+            "Nenhum, pois a Administração tem discricionariedade absoluta."
+          ], correct: 0 },
+        { q: "O que é o diálogo competitivo e quando é aplicável?",
+          options: [
+            "Modalidade da Lei 14.133/21 para objetos que envolvam inovação tecnológica ou que não possam ser definidos com precisão, com diálogo com licitantes selecionados.",
+            "É uma fase do pregão.",
+            "É um tipo de contrato administrativo.",
+            "É um procedimento de dispensa de licitação."
+          ], correct: 0 },
+        { q: "O que é o critério de julgamento \"maior retorno econômico\"?",
+          options: [
+            "Critério para contratos de eficiência, em que a remuneração do contratado é baseada na economia gerada para a Administração.",
+            "Critério para alienação de bens.",
+            "Critério para compra de bens comuns.",
+            "Critério exclusivo para obras de engenharia."
+          ], correct: 0 },
+        { q: "Quais são as modalidades de licitação previstas na Lei n. 14.133/2021?",
+          options: [
+            "Pregão, concorrência, concurso, leilão e diálogo competitivo.",
+            "Concorrência, tomada de preços, convite, concurso e leilão.",
+            "Pregão, tomada de preços, convite e concurso.",
+            "Concorrência, leilão e diálogo competitivo apenas."
+          ], correct: 0 },
+        { q: "O que é a fase de habilitação na Lei 14.133/21 e qual sua principal inovação?",
+          options: [
+            "Verificação de documentos; a principal inovação é a possibilidade de inversão de fases (habilitação após julgamento).",
+            "É a fase de lances; inovação é o sigilo das propostas.",
+            "É a fase de pagamento; inovação é o pix.",
+            "É a fase de publicação do edital; inovação é o PNCP."
+          ], correct: 0 },
+        { q: "O que é o Portal Nacional de Contratações Públicas (PNCP)?",
+          options: [
+            "Sistema oficial de divulgação e transparência das contratações públicas, instituído pela Lei 14.133/21.",
+            "É o sistema de cadastro de fornecedores.",
+            "É o diário oficial da União.",
+            "É uma plataforma privada de compras."
+          ], correct: 0 },
+        { q: "Qual é o prazo mínimo de divulgação do edital no PNCP para o pregão e a concorrência?",
+          options: [
+            "8 dias úteis para o pregão e 10 dias úteis para a concorrência.",
+            "5 dias úteis para ambos.",
+            "15 dias corridos para ambos.",
+            "10 dias úteis para o pregão e 5 para concorrência."
+          ], correct: 0 },
+        { q: "O que é a contratação integrada e em que situações pode ser utilizada?",
+          options: [
+            "Regime em que o contratado elabora projeto básico e executivo e executa a obra; para inovação tecnológica ou quando possível definir requisitos de desempenho.",
+            "É a contratação de serviços comuns com preço fixo.",
+            "É a contratação de pessoal por tempo determinado.",
+            "É a compra de bens de consumo imediato."
+          ], correct: 0 },
+        { q: "O que é a ata de registro de preços e qual sua finalidade?",
+          options: [
+            "Documento que registra preços de bens e serviços para contratações futuras após licitação, permitindo contratações mais céleres.",
+            "É o contrato de adesão para compras públicas.",
+            "É a lista de fornecedores inidôneos.",
+            "É o edital de licitação."
+          ], correct: 0 },
+        { q: "O que é o sistema de registro de preços e qual sua base legal?",
+          options: [
+            "Conjunto de procedimentos para registro formal de preços para contratações futuras, previsto na Lei 14.133/21 e regulamentos.",
+            "Sistema criado pela Lei 8.666/93.",
+            "É o cadastro de preços da iniciativa privada.",
+            "É o sistema de pregão eletrônico."
+          ], correct: 0 },
+        { q: "O que é o contrato de eficiência?",
+          options: [
+            "Contrato em que a remuneração do contratado é fixada com base na economia gerada para a Administração.",
+            "Contrato de fornecimento de energia elétrica.",
+            "Contrato de prestação de serviços de limpeza.",
+            "Contrato de obras públicas."
+          ], correct: 0 },
+        { q: "O que é a concorrência na Lei 14.133/21?",
+          options: [
+            "Modalidade para bens e serviços especiais e obras comuns e especiais de engenharia, com critérios variados.",
+            "Modalidade exclusiva para compra de bens comuns.",
+            "Modalidade para alienação de bens.",
+            "Modalidade para escolha de trabalho artístico."
+          ], correct: 0 },
+        { q: "O que é o leilão na Lei 14.133/21?",
+          options: [
+            "Modalidade para alienação de bens imóveis ou bens móveis inservíveis ou apreendidos ao maior lance.",
+            "Modalidade para compra de bens comuns.",
+            "Modalidade para contratação de serviços técnicos.",
+            "Modalidade para obras de engenharia."
+          ], correct: 0 },
+        { q: "O que é o concurso na Lei 14.133/21?",
+          options: [
+            "Modalidade para escolha de trabalho técnico, científico ou artístico, com prêmio ou remuneração.",
+            "Modalidade para compra de bens de informática.",
+            "Modalidade para alienação de bens imóveis.",
+            "Modalidade para serviços de limpeza."
+          ], correct: 0 },
+        { q: "O que é o diálogo competitivo na Lei 14.133/21?",
+          options: [
+            "Modalidade em que a Administração dialoga com licitantes previamente selecionados para desenvolver alternativas que atendam às suas necessidades.",
+            "É a fase de negociação do pregão.",
+            "É o procedimento de dispensa de licitação.",
+            "É o leilão de bens móveis."
+          ], correct: 0 },
+        { q: "Quais são os critérios de julgamento previstos na Lei 14.133/21?",
+          options: [
+            "Menor preço, maior desconto, melhor técnica ou conteúdo artístico, técnica e preço, maior lance e maior retorno econômico.",
+            "Menor preço, melhor técnica, técnica e preço apenas.",
+            "Maior lance, menor preço e maior desconto apenas.",
+            "Melhor técnica e conteúdo artístico apenas."
+          ], correct: 0 },
+        { q: "O que é o orçamento estimado e qual sua função?",
+          options: [
+            "Valor estimado da contratação que consta no edital e serve de parâmetro para o julgamento; a Administração não pode contratar acima dele.",
+            "É a proposta do licitante vencedor.",
+            "É o valor pago após a execução.",
+            "É o limite para aditivos contratuais."
+          ], correct: 0 },
+        { q: "O que é a matriz de riscos e qual sua função nos contratos administrativos?",
+          options: [
+            "Documento que define a alocação de riscos entre a Administração e o contratado, dando segurança jurídica e evitando conflitos.",
+            "É o cronograma físico-financeiro da obra.",
+            "É o plano de fiscalização do contrato.",
+            "É a garantia contratual."
+          ], correct: 0 },
+        { q: "O que é a garantia contratual e quais são suas modalidades?",
+          options: [
+            "Garantia para assegurar o cumprimento das obrigações; caução em dinheiro ou títulos, seguro-garantia e fiança bancária.",
+            "Apenas fiança bancária.",
+            "Apenas seguro-garantia.",
+            "Garantia real sobre imóveis do contratado."
+          ], correct: 0 },
+        { q: "Qual é o limite máximo para a garantia contratual?",
+          options: [
+            "5% do valor do contrato, podendo chegar a 10% em obras, serviços e fornecimentos de grande vulto.",
+            "10% do valor do contrato, sem exceções.",
+            "20% do valor do contrato.",
+            "Não há limite legal."
+          ], correct: 0 },
+        { q: "O que é a cláusula de reajuste e qual sua finalidade?",
+          options: [
+            "Prevê atualização dos preços após 12 meses, com base em índice, para manter o equilíbrio econômico-financeiro.",
+            "Permite alterar o objeto do contrato.",
+            "Autoriza a rescisão unilateral.",
+            "Define as penalidades contratuais."
+          ], correct: 0 },
+        { q: "O que é a cláusula de revisão e qual sua finalidade?",
+          options: [
+            "Prevê revisão dos preços em razão de fatos imprevisíveis ou previsíveis de consequências incalculáveis que alterem o equilíbrio econômico-financeiro.",
+            "Atualiza os preços anualmente pelo IPCA.",
+            "Permite a prorrogação do prazo contratual.",
+            "Estabelece a garantia contratual."
+          ], correct: 0 },
+        { q: "O que é a teoria da imprevisão e como se aplica aos contratos administrativos?",
+          options: [
+            "Permite revisão do contrato em razão de acontecimentos externos, imprevisíveis e inevitáveis, que causem desequilíbrio excessivo.",
+            "Permite a rescisão unilateral imediata.",
+            "É aplicável apenas a contratos de obras públicas.",
+            "Não se aplica aos contratos administrativos."
+          ], correct: 0 },
+        { q: "O que é o fato do príncipe e como se diferencia do fato da administração?",
+          options: [
+            "Fato do príncipe: medida geral não relacionada diretamente ao contrato; fato da administração: ação da Administração diretamente relacionada ao contrato.",
+            "São sinônimos.",
+            "Fato do príncipe: ato do contratado; fato da administração: ato do juiz.",
+            "Fato do príncipe: somente tributos; fato da administração: somente atrasos."
+          ], correct: 0 },
+        { q: "O que é a álea administrativa e quais são seus tipos?",
+          options: [
+            "Risco decorrente de atos ou fatos da Administração; inclui alteração unilateral, fato do príncipe e fato da administração.",
+            "Risco de mercado; inclui variação cambial e inflação.",
+            "Risco de caso fortuito e força maior.",
+            "Risco de inadimplência do contratado."
+          ], correct: 0 },
+        { q: "O que é a álea econômica e como se relaciona com a teoria da imprevisão?",
+          options: [
+            "Risco decorrente de acontecimentos externos imprevisíveis que alteram a equação econômico-financeira; a teoria da imprevisão é o instrumento para revisão.",
+            "Risco de atos da Administração; não se relaciona com a teoria da imprevisão.",
+            "É a mesma coisa que álea administrativa.",
+            "É o risco de variação de preços de mercado previsível."
+          ], correct: 0 },
+        { q: "O que é a rescisão contratual e quais são suas formas?",
+          options: [
+            "Extinção do contrato antes do termo final; pode ser determinada pela Administração, por acordo ou por decisão judicial.",
+            "Extinção após o termo final; apenas por acordo.",
+            "É a prorrogação do contrato.",
+            "É a aplicação de multa."
+          ], correct: 0 },
+        { q: "Quais são as consequências da rescisão contratual por culpa da Administração?",
+          options: [
+            "O particular tem direito à indenização pelos prejuízos, devolução da garantia, pagamentos devidos e custo da desmobilização.",
+            "O particular não tem direito a nada.",
+            "O particular deve pagar multa à Administração.",
+            "A Administração assume o objeto sem qualquer pagamento."
+          ], correct: 0 },
+        { q: "Quais são as consequências da rescisão contratual por culpa do particular?",
+          options: [
+            "Sanções administrativas, civis e criminais; Administração pode executar a garantia e reter créditos.",
+            "O particular não sofre sanções.",
+            "Apenas advertência verbal.",
+            "A Administração deve indenizar o particular."
+          ], correct: 0 },
+        { q: "O que é o recebimento provisório e o definitivo do objeto do contrato?",
+          options: [
+            "Provisório: conferência inicial em até 15 dias; definitivo: aceitação final em até 90 dias.",
+            "Provisório: aceitação final; definitivo: conferência inicial.",
+            "Ambos ocorrem em até 5 dias.",
+            "Não há distinção legal."
+          ], correct: 0 },
+        { q: "O que acontece se o objeto for entregue em desacordo com o especificado?",
+          options: [
+            "A Administração registra a desconformidade e condiciona o recebimento definitivo à correção; o pagamento das unidades irregulares fica retido.",
+            "A Administração deve aceitar mesmo assim.",
+            "O contrato é rescindido automaticamente.",
+            "O contratado é obrigado a refazer tudo sem pagamento."
+          ], correct: 0 },
+        { q: "Qual é a importância dos registros da fiscalização para a responsabilização do contratado?",
+          options: [
+            "Servem como prova documental da desconformidade, fundamentando glosas, cobranças e sanções.",
+            "São apenas formais e não têm valor probatório.",
+            "Servem para elogiar o contratado.",
+            "Não podem ser utilizados em processo administrativo."
+          ], correct: 0 },
+        { q: "O que é a subcontratação e quais são seus limites?",
+          options: [
+            "Transferência parcial da execução a terceiros; a Lei 8.666/93 pune a subcontratação não autorizada no edital ou contrato.",
+            "É proibida em qualquer hipótese.",
+            "É permitida apenas com autorização judicial.",
+            "Não há previsão legal."
+          ], correct: 0 },
+        { q: "O que são as cláusulas exorbitantes e qual sua função?",
+          options: [
+            "Conferem prerrogativas especiais à Administração (modificar, rescindir, fiscalizar, sancionar) para assegurar a supremacia do interesse público.",
+            "São cláusulas que beneficiam exclusivamente o contratado.",
+            "São cláusulas de equilíbrio econômico-financeiro.",
+            "São cláusulas de garantia contratual."
+          ], correct: 0 },
+        { q: "O que é a Parceria Público-Privada (PPP) e quais são suas modalidades?",
+          options: [
+            "Contrato de concessão patrocinada ou administrativa.",
+            "Contrato de empreitada por preço global.",
+            "Contrato de fornecimento de bens.",
+            "Contrato de prestação de serviços sem concessão."
+          ], correct: 0 },
+        { q: "Qual é o valor mínimo para a celebração de um contrato de PPP?",
+          options: [
+            "Superior a R$ 20 milhões.",
+            "Superior a R$ 5 milhões.",
+            "Superior a R$ 50 milhões.",
+            "Não há valor mínimo legal."
+          ], correct: 0 },
+        { q: "Qual é o prazo mínimo e máximo para a prestação de serviços em um contrato de PPP?",
+          options: [
+            "Superior a 5 anos e inferior a 35 anos.",
+            "De 1 a 10 anos.",
+            "De 5 a 20 anos.",
+            "De 10 a 50 anos."
+          ], correct: 0 },
+        { q: "Qual é a modalidade de licitação exigida para a contratação de PPP?",
+          options: [
+            "Concorrência.",
+            "Pregão.",
+            "Tomada de preços.",
+            "Convite."
+          ], correct: 0 },
+        { q: "O que é a Sociedade de Propósito Específico (SPE) no contexto das PPPs?",
+          options: [
+            "Sociedade constituída antes da celebração do contrato de PPP, incumbida de implantar e gerir o objeto; Administração não pode ser titular da maioria do capital votante.",
+            "É uma empresa pública criada para gerir a PPP.",
+            "É uma organização social.",
+            "É um consórcio de empresas públicas."
+          ], correct: 0 },
+        { q: "O que é o contrato de concessão e quais são suas modalidades?",
+          options: [
+            "Delega a prestação de serviços públicos ou execução de obras públicas a particular, por sua conta e risco e prazo determinado; modalidades: concessão de serviço público e precedida de obra pública.",
+            "É o contrato de compra de bens.",
+            "É o contrato de prestação de serviços comuns.",
+            "É o contrato de locação de imóveis."
+          ], correct: 0 },
+        { q: "Como se dá a remuneração do concessionário no contrato de concessão?",
+          options: [
+            "Por tarifa cobrada dos usuários, fixada pelo preço da proposta vencedora, podendo haver outras receitas.",
+            "Exclusivamente por pagamento do poder concedente.",
+            "Por doações de terceiros.",
+            "Por subsídios governamentais fixos."
+          ], correct: 0 },
+        { q: "Quais são as causas de extinção da concessão?",
+          options: [
+            "Fim do termo contratual, encampação, caducidade, rescisão, anulação, falência ou extinção da empresa, falecimento ou incapacidade do titular.",
+            "Apenas o fim do prazo.",
+            "Somente por decisão judicial.",
+            "Apenas por encampação."
+          ], correct: 0 },
+        { q: "O que é o contrato de gestão e com quem é celebrado?",
+          options: [
+            "Celebrado entre a Administração Pública e entidades qualificadas como Organização Social para fomento e execução de atividades nas áreas de ensino, pesquisa, meio ambiente, cultura e saúde.",
+            "Celebrado com empresas privadas com fins lucrativos.",
+            "Celebrado com órgãos da administração direta.",
+            "Celebrado com pessoas físicas."
+          ], correct: 0 },
+        { q: "O que é uma Organização Social?",
+          options: [
+            "Qualificação atribuível a pessoa jurídica de direito privado, sem fins lucrativos, com objeto social relacionado a ensino, pesquisa, meio ambiente, cultura ou saúde.",
+            "Empresa pública federal.",
+            "Autarquia estadual.",
+            "Fundação pública de direito público."
+          ], correct: 0 },
+        { q: "Quais são os elementos mínimos que um contrato de gestão deve conter?",
+          options: [
+            "Forma de exercício da autonomia, metas a serem cumpridas e controle de resultados.",
+            "Apenas o valor do repasse financeiro.",
+            "Nomeação de servidores para a entidade.",
+            "Previsão de lucro para a entidade."
+          ], correct: 0 },
+        { q: "Qual é o objetivo do contrato de gestão?",
+          options: [
+            "Fomentar atividades sociais, permitindo que entidades qualificadas recebam recursos orçamentários e bens públicos, e servidores públicos.",
+            "Transferir a titularidade de serviços públicos.",
+            "Privatizar atividades estatais.",
+            "Contratar pessoal para a Administração."
+          ], correct: 0 },
+        { q: "O que é o equilíbrio econômico-financeiro do contrato?",
+          options: [
+            "Relação de igualdade entre as obrigações assumidas pelo contratante e a compensação econômica que lhe corresponderá, garantindo que a equação inicial não seja alterada por fatos supervenientes.",
+            "É a margem de lucro do contratado.",
+            "É a diferença entre receita e despesa da Administração.",
+            "É o valor da garantia contratual."
+          ], correct: 0 },
+        { q: "O que é a alteração unilateral do contrato e quais são seus limites?",
+          options: [
+            "Prerrogativa da Administração de modificar o projeto ou valor por interesse público; limite de 25% (obras, serviços, compras) e 50% (reforma de edifício ou equipamento).",
+            "Pode alterar livremente, sem limites.",
+            "Limite de 10% em qualquer caso.",
+            "Somente com concordância do contratado."
+          ], correct: 0 },
+        { q: "O que é a supressão de obras, serviços ou compras e quais são os direitos do contratado?",
+          options: [
+            "Redução do objeto por decisão da Administração; se o contratado já houver adquirido materiais e entregue no local, a Administração deve pagar os custos de aquisição e indenizar outros danos comprovados.",
+            "O contratado não tem direito a nada.",
+            "A Administração deve pagar o valor total do contrato.",
+            "A supressão só é possível com acordo entre as partes."
+          ], correct: 0 },
+        { q: "O que é o termo aditivo e quando ele é necessário?",
+          options: [
+            "Instrumento formal para alterar cláusulas do contrato (prazo, valor, objeto, condições); necessário quando a alteração não puder ser registrada por apostila.",
+            "É utilizado apenas para reajuste de preços.",
+            "É obrigatório para qualquer alteração.",
+            "É um documento informal."
+          ], correct: 0 },
+        { q: "O que é a apostila e quando ela é utilizada?",
+          options: [
+            "Registro simples no processo para alterações que não modifiquem o objeto, como reajuste, atualizações e compensações financeiras.",
+            "É o mesmo que termo aditivo.",
+            "É a garantia contratual.",
+            "É a publicação do contrato."
+          ], correct: 0 },
+        { q: "O que é a teoria da imprevisão e qual sua diferença da força maior?",
+          options: [
+            "Imprevisão permite revisão do contrato para restabelecer o equilíbrio por evento imprevisível que torne a execução excessivamente onerosa; força maior é evento imprevisível e inevitável que impossibilita a execução, levando à rescisão.",
+            "São sinônimos.",
+            "Força maior permite revisão; imprevisão leva à rescisão.",
+            "A imprevisão não se aplica a contratos administrativos."
+          ], correct: 0 },
+        { q: "O que é o caso fortuito e como se diferencia da força maior?",
+          options: [
+            "Caso fortuito é evento decorrente de ato humano ou falha da Administração; força maior é acontecimento natural ou externo, imprevisível e inevitável, estranho à vontade das partes.",
+            "São expressões idênticas.",
+            "Caso fortuito é sempre natural; força maior é sempre humano.",
+            "Ambos são eventos previsíveis."
+          ], correct: 0 },
+        { q: "Quais são os crimes previstos na Lei n. 8.666/93 relacionados à licitação?",
+          options: [
+            "Dispensar ou inexigir licitação fora das hipóteses legais; frustrar ou fraudar o caráter competitivo; patrocinar interesse privado; admitir vantagem; impedir, perturbar ou fraudar procedimento; devassar sigilo; afastar licitante por violência ou fraude; fraudar licitação ou contrato; admitir empresa inidônea; obstar inscrição em registros cadastrais.",
+            "Apenas fraudar licitação.",
+            "Apenas dispensar licitação.",
+            "Não há crimes na lei de licitações."
+          ], correct: 0 },
+        { q: "Qual é a pena para o crime de dispensar ou inexigir licitação fora das hipóteses previstas em lei?",
+          options: [
+            "Detenção de 3 a 5 anos e multa.",
+            "Detenção de 2 a 4 anos e multa.",
+            "Reclusão de 1 a 3 anos.",
+            "Apenas multa."
+          ], correct: 0 },
+        { q: "Qual é a pena para o crime de frustrar ou fraudar o caráter competitivo do procedimento licitatório?",
+          options: [
+            "Detenção de 2 a 4 anos e multa.",
+            "Detenção de 3 a 5 anos e multa.",
+            "Reclusão de 4 a 8 anos.",
+            "Advertência escrita."
+          ], correct: 0 },
+        { q: "O que é o chamamento público e qual sua finalidade?",
+          options: [
+            "Procedimento adotado antes de celebrar convênio com entidade privada sem fins lucrativos, para selecionar projetos e entidades, garantindo publicidade e isonomia.",
+            "É a licitação para compra de bens.",
+            "É o convite para empresas participarem de pregão.",
+            "É a publicação do edital de concorrência."
+          ], correct: 0 },
+        { q: "O que é o convênio e qual sua principal diferença em relação ao contrato administrativo?",
+          options: [
+            "Ajuste com entidades sem fins lucrativos ou órgãos públicos para execução de atividade de interesse comum; a principal diferença é que no convênio predomina a cooperação, enquanto no contrato há interesses contrapostos.",
+            "O convênio é um tipo de contrato de compra.",
+            "O convênio é celebrado apenas com empresas privadas.",
+            "Não há diferença."
+          ], correct: 0 },
+        { q: "Qual é o marco legal dos convênios no âmbito federal?",
+          options: [
+            "Decreto 6.170/07 (alterado pelo 6.619/08) e Portaria Interministerial 507/11.",
+            "Lei 8.666/93 apenas.",
+            "Lei 14.133/21.",
+            "Decreto 5.450/05."
+          ], correct: 0 },
+        { q: "O que é o Plano de Trabalho de um convênio e quais informações deve conter?",
+          options: [
+            "Documento que detalha a execução: objeto, metas, etapas, plano de aplicação, cronograma de desembolso, previsão de início e fim.",
+            "É o contrato de repasse.",
+            "É o parecer jurídico do convênio.",
+            "É a prestação de contas final."
+          ], correct: 0 },
+        { q: "O que é o SICONV e qual sua finalidade?",
+          options: [
+            "Sistema de Gestão de Convênios e Contratos de Repasse, que registra celebração, liberação de recursos, acompanhamento e prestação de contas.",
+            "Sistema de cadastro de fornecedores.",
+            "Sistema de compras governamentais.",
+            "Sistema de controle de obras."
+          ], correct: 0 },
+        { q: "Quais são as vedações para a celebração de convênios?",
+          options: [
+            "Com entes federativos para valores inferiores a R$ 100.000,00; com entidades privadas cujos dirigentes sejam membros de Poder ou servidores do órgão concedente e parentes; entre órgãos federais (usar termo de cooperação); com inadimplentes; com pessoas físicas ou entidades com fins lucrativos.",
+            "Nenhuma vedação legal.",
+            "Apenas com pessoas físicas.",
+            "Apenas com entidades com fins lucrativos."
+          ], correct: 0 },
+        { q: "O que é a contrapartida em um convênio?",
+          options: [
+            "Parcela de recursos financeiros, bens ou serviços que a entidade convenente deve apresentar para complementar os recursos transferidos.",
+            "É a devolução dos recursos não utilizados.",
+            "É o valor da multa por inadimplência.",
+            "É a taxa de administração do concedente."
+          ], correct: 0 },
+        { q: "Como devem ser movimentados os recursos financeiros recebidos por convênio?",
+          options: [
+            "Em conta bancária específica, com pagamentos mediante crédito na conta dos fornecedores e transferência de informações ao SIAFI e Portal de Convênios.",
+            "Em conta pessoal do dirigente da entidade.",
+            "Em espécie, com recibo simples.",
+            "Diretamente no caixa da entidade."
+          ], correct: 0 },
+        { q: "O que acontece se a entidade não utilizar os recursos financeiros recebidos imediatamente?",
+          options: [
+            "Devem ser aplicados em poupança de instituição financeira oficial (se uso em prazo igual ou superior a um mês) ou em fundo de curto prazo/operação de mercado aberto lastreada em títulos públicos (prazos menores).",
+            "Devem ser devolvidos imediatamente.",
+            "Podem ser usados para qualquer finalidade.",
+            "Podem ser emprestados a terceiros."
+          ], correct: 0 },
+        { q: "Qual é o prazo para prestação de contas de um convênio?",
+          options: [
+            "30 dias contados do término da vigência ou do último pagamento efetuado, se anterior.",
+            "60 dias após o término da vigência.",
+            "90 dias após o último pagamento.",
+            "Não há prazo definido."
+          ], correct: 0 },
+        { q: "O que acontece se a prestação de contas não for encaminhada no prazo?",
+          options: [
+            "O concedente estabelece 30 dias para apresentação ou recolhimento; findo o prazo, registra inadimplência no SICONV e comunica para tomada de contas especial.",
+            "A entidade é automaticamente multada em 50%.",
+            "O convênio é prorrogado automaticamente.",
+            "Nada acontece."
+          ], correct: 0 },
+        { q: "O que é a tomada de contas especial?",
+          options: [
+            "Instrumento para ressarcir a Administração de prejuízos, com rito próprio, instaurado após esgotadas as medidas administrativas de reparação.",
+            "É a prestação de contas regular.",
+            "É o processo de licitação para convênios.",
+            "É a auditoria anual da entidade."
+          ], correct: 0 },
+        { q: "Qual é a diferença entre convênio e contrato de repasse?",
+          options: [
+            "O contrato de repasse difere apenas porque a transferência ao destinatário final é feita por intermédio de instituição financeira.",
+            "O contrato de repasse não envolve recursos públicos.",
+            "O convênio é celebrado apenas com empresas.",
+            "São institutos idênticos."
+          ], correct: 0 },
+        { q: "O que é o termo de cooperação e quando é utilizado?",
+          options: [
+            "Instrumento utilizado para celebração de convênios entre órgãos e entidades da Administração Pública federal, conforme vedação do Decreto 6.170/07.",
+            "É o mesmo que contrato de repasse.",
+            "É utilizado para parcerias com organizações sociais.",
+            "É a licitação para convênios."
+          ], correct: 0 },
+        { q: "O que é o termo de fomento e qual sua base legal?",
+          options: [
+            "Instrumento da Lei 13.019/2014 (MROSC) para transferência de recursos a organização da sociedade civil para projeto concebido por ela.",
+            "Instrumento da Lei 8.666/93 para convênios.",
+            "É o contrato de gestão.",
+            "É o termo de parceria da Lei 9.790/99."
+          ], correct: 0 },
+        { q: "O que é o termo de colaboração e qual sua base legal?",
+          options: [
+            "Instrumento da Lei 13.019/2014 (MROSC) para transferência de recursos a organização da sociedade civil para projeto concebido pela Administração Pública.",
+            "Instrumento da Lei 8.666/93 para convênios.",
+            "É o contrato de repasse.",
+            "É o termo de fomento."
+          ], correct: 0 },
+        { q: "O que é o acordo de cooperação e qual sua base legal?",
+          options: [
+            "Instrumento da Lei 13.019/2014 (MROSC) para parcerias sem transferência de recursos financeiros, visando cooperação.",
+            "É o convênio federal.",
+            "É o contrato de gestão.",
+            "É a licitação para parcerias."
+          ], correct: 0 },
+        { q: "Qual é a principal diferença entre o regime da Lei 8.666/93 e o da Lei 13.019/2014 (MROSC) para parcerias?",
+          options: [
+            "A Lei 8.666/93 trata de convênios em geral; a MROSC estabelece regime específico para parcerias com organizações da sociedade civil, com regras próprias de seleção, execução e prestação de contas.",
+            "Não há diferença.",
+            "A Lei 8.666/93 é mais específica para organizações sociais.",
+            "A MROSC revogou a Lei 8.666/93."
+          ], correct: 0 },
+        { q: "O que é o chamamento público no âmbito do MROSC?",
+          options: [
+            "Procedimento para selecionar organizações da sociedade civil para firmar parceria, observando isonomia, legalidade, impessoalidade, moralidade, publicidade, probidade, vinculação ao instrumento convocatório e julgamento objetivo.",
+            "É a licitação para compra de bens.",
+            "É o convite para empresas participarem de pregão.",
+            "É a publicação do edital de concorrência."
+          ], correct: 0 },
+        { q: "Quais são as fases do chamamento público no MROSC?",
+          options: [
+            "Preparatória, divulgação, apresentação e julgamento das propostas, homologação e adjudicação.",
+            "Apenas divulgação e julgamento.",
+            "Habilitação, julgamento, homologação e adjudicação.",
+            "Publicação, lances e adjudicação."
+          ], correct: 0 },
+        { q: "O que é a prestação de contas no âmbito do MROSC?",
+          options: [
+            "Procedimento pelo qual a organização parceira apresenta documentos e informações para comprovar a correta aplicação dos recursos e o cumprimento do objeto.",
+            "É a entrega do relatório de atividades.",
+            "É a auditoria do Tribunal de Contas.",
+            "É a fiscalização do contrato."
+          ], correct: 0 },
+        { q: "Quais são os princípios que regem a licitação?",
+          options: [
+            "Legalidade, impessoalidade, moralidade, publicidade, eficiência, probidade administrativa, vinculação ao instrumento convocatório, julgamento objetivo, isonomia e competitividade.",
+            "Apenas legalidade e publicidade.",
+            "Apenas isonomia e competitividade.",
+            "Apenas moralidade e eficiência."
+          ], correct: 0 },
+        { q: "O que é a competitividade no contexto da licitação?",
+          options: [
+            "Princípio que busca a mais ampla participação de licitantes, evitando restrições indevidas.",
+            "É a disputa entre empresas por menores preços.",
+            "É a capacidade de a Administração impor sua vontade.",
+            "É a qualidade da proposta técnica."
+          ], correct: 0 },
+        { q: "O que é a economicidade no contexto da licitação?",
+          options: [
+            "Princípio que busca a proposta mais vantajosa, com o melhor resultado pelo menor custo, evitando desperdícios.",
+            "É a redução do número de licitantes.",
+            "É o aumento da arrecadação tributária.",
+            "É a garantia de lucro para o contratado."
+          ], correct: 0 },
+        { q: "O que é a probidade administrativa no contexto da licitação?",
+          options: [
+            "Exigência de comportamento ético, honesto e transparente dos agentes públicos e licitantes, vedando corrupção, fraude, conluio e favorecimento.",
+            "É a obrigação de o licitante provar que não tem dívidas.",
+            "É a garantia de sigilo das propostas.",
+            "É a preferência por empresas locais."
+          ], correct: 0 },
+        { q: "O que é a vinculação ao instrumento convocatório?",
+          options: [
+            "Princípio que estabelece que a Administração e os licitantes devem cumprir integralmente as regras do edital ou convite, não podendo alterá-las durante o procedimento.",
+            "É a obrigação de o licitante adquirir o edital.",
+            "É a vinculação do contrato ao orçamento.",
+            "É a submissão do licitante às decisões do pregoeiro."
+          ], correct: 0 },
+        { q: "O que é o julgamento objetivo?",
+          options: [
+            "Princípio que exige que a Administração julgue as propostas com base em critérios claros, objetivos e previamente estabelecidos no edital, vedando subjetividade ou favorecimento.",
+            "É a análise subjetiva das propostas pela comissão.",
+            "É o julgamento realizado por um único servidor.",
+            "É a escolha da proposta mais barata obrigatoriamente."
+          ], correct: 0 },
+        { q: "O que é a anulação da licitação?",
+          options: [
+            "Declaração de nulidade do procedimento por vício de ilegalidade, por decisão da Administração ou judicial.",
+            "Extinção por interesse público.",
+            "É a revogação por conveniência.",
+            "É a desistência de um licitante."
+          ], correct: 0 },
+        { q: "O que é a revogação da licitação?",
+          options: [
+            "Extinção do procedimento por razões de interesse público, devidamente demonstradas.",
+            "Declaração de nulidade por ilegalidade.",
+            "É a anulação por vício.",
+            "É a desclassificação de todos os licitantes."
+          ], correct: 0 },
+        { q: "Qual é a diferença entre anulação e revogação da licitação?",
+          options: [
+            "Anulação decorre de vício de ilegalidade; revogação decorre de razões de interesse público, sem ilegalidade.",
+            "Ambas decorrem de ilegalidade.",
+            "Anulação é por interesse público; revogação por ilegalidade.",
+            "Não há diferença."
+          ], correct: 0 },
+        { q: "O que é o contrato administrativo?",
+          options: [
+            "Avença entre Administração e terceiros em que a permanência do vínculo e as condições preestabelecidas se sujeitam a imposições de interesse público, ressalvados os interesses patrimoniais do contratante privado.",
+            "É todo contrato firmado por qualquer pessoa.",
+            "É o contrato de trabalho dos servidores públicos.",
+            "É o convênio."
+          ], correct: 0 },
+        { q: "Quais são as cláusulas necessárias em um contrato administrativo?",
+          options: [
+            "Objeto, regime de execução, preço e condições de pagamento, prazos, crédito orçamentário, direitos e responsabilidades, penalidades, casos de rescisão e vinculação ao edital.",
+            "Apenas objeto e preço.",
+            "Apenas prazo e valor.",
+            "Apenas as cláusulas de garantia."
+          ], correct: 0 },
+        { q: "Qual é a regra geral para o prazo de vigência dos contratos administrativos?",
+          options: [
+            "Limitado à vigência do crédito orçamentário, ou seja, até 31 de dezembro.",
+            "Prazo de 5 anos, prorrogável por mais 5.",
+            "Prazo de 12 meses, prorrogável indefinidamente.",
+            "Não há limite legal."
+          ], correct: 0 },
+        { q: "Em que hipóteses o prazo do contrato administrativo pode ser prorrogado?",
+          options: [
+            "Objeto contemplado nas metas do PPA; serviço executado de forma contínua (até 60 meses); aluguel de equipamentos e programas de informática (até 48 meses).",
+            "Apenas para serviços contínuos, por até 12 meses.",
+            "Apenas com autorização do Tribunal de Contas.",
+            "Em qualquer hipótese, por prazo indeterminado."
+          ], correct: 0 },
+        { q: "O que é a publicação resumida do contrato e qual seu prazo?",
+          options: [
+            "Extrato do contrato na imprensa oficial, até o quinto dia útil do mês seguinte ao da assinatura, para ocorrer no prazo de vinte dias; condição indispensável para a eficácia.",
+            "Publicação integral do contrato em até 48 horas.",
+            "Publicação apenas no site do órgão.",
+            "Não é necessária."
+          ], correct: 0 },
+        { q: "Em que casos o contrato administrativo pode ser substituído por outros instrumentos hábeis?",
+          options: [
+            "Carta-contrato, nota de empenho, autorização de compra ou ordem de execução de serviço; e compras com entrega imediata e integral sem obrigações futuras.",
+            "Nunca pode ser substituído.",
+            "Apenas por decisão judicial.",
+            "Apenas em caso de emergência."
+          ], correct: 0 },
+        { q: "Qual é o prazo para a celebração do contrato após a convocação do vencedor?",
+          options: [
+            "Não superior a 60 dias, prazo de validade da proposta; se não convocado nesse período, o vencedor fica liberado.",
+            "30 dias.",
+            "90 dias.",
+            "Não há prazo definido."
+          ], correct: 0 },
+        { q: "O que acontece se o vencedor da licitação não assinar o contrato?",
+          options: [
+            "Sujeita-se às penalidades do art. 81 da Lei 8.666/93: advertência, multa, suspensão temporária e declaração de inidoneidade.",
+            "É automaticamente desclassificado, sem outras sanções.",
+            "Perde apenas a garantia.",
+            "Nada acontece."
+          ], correct: 0 },
+        { q: "O que é a alteração por acordo das partes no contrato administrativo?",
+          options: [
+            "Alteração mediante consenso entre Administração e contratado, para substituição de garantia, modificação do regime de execução, modo de fornecimento, forma de pagamento ou manutenção do equilíbrio econômico-financeiro.",
+            "É a alteração unilateral.",
+            "É a rescisão amigável.",
+            "É a prorrogação automática."
+          ], correct: 0 },
+        { q: "O que é a alteração unilateral do contrato administrativo?",
+          options: [
+            "Alteração determinada pela Administração, independentemente da concordância do contratado, para modificar o projeto, especificações ou valor, por interesse público.",
+            "Alteração que depende de acordo entre as partes.",
+            "É a rescisão contratual.",
+            "É a aplicação de sanção."
+          ], correct: 0 },
+        { q: "Qual é o limite para acréscimos ou supressões no valor do contrato?",
+          options: [
+            "25% do valor inicial atualizado para obras, serviços ou compras; 50% para reforma de edifício ou equipamento.",
+            "10% para qualquer caso.",
+            "50% para obras e 25% para reforma.",
+            "Não há limite legal."
+          ], correct: 0 },
+        { q: "O que é a execução do contrato administrativo?",
+          options: [
+            "Fase em que as partes cumprem as obrigações, cabendo à Administração fiscalizar e ao contratado entregar o objeto, respondendo por encargos trabalhistas, previdenciários, fiscais e comerciais.",
+            "É a fase de pagamento pelo serviço.",
+            "É a fase de licitação.",
+            "É a fase de rescisão."
+          ], correct: 0 },
+        { q: "O que é a inexecução do contrato administrativo?",
+          options: [
+            "Descumprimento total ou parcial das obrigações por qualquer das partes, podendo gerar rescisão e sanções.",
+            "É a execução parcial regular.",
+            "É a prorrogação do contrato.",
+            "É a alteração unilateral."
+          ], correct: 0 },
+        { q: "O que é a rescisão do contrato administrativo?",
+          options: [
+            "Extinção do contrato antes do termo final, determinada pela Administração, por acordo ou por decisão judicial.",
+            "Extinção após o termo final.",
+            "É a prorrogação.",
+            "É a alteração unilateral."
+          ], correct: 0 },
+        { q: "Quais são as responsabilidades do contratado na execução do contrato?",
+          options: [
+            "Pela perfeita entrega do objeto e pelos encargos trabalhistas, previdenciários, fiscais e comerciais resultantes da execução.",
+            "Apenas pelo cumprimento do prazo.",
+            "Apenas pelo pagamento dos empregados.",
+            "Nenhuma, pois a responsabilidade é da Administração."
+          ], correct: 0 },
+        { q: "Qual é a responsabilidade da Administração na execução do contrato?",
+          options: [
+            "Responde solidariamente pelos encargos previdenciários resultantes da execução e tem o dever de fiscalizar.",
+            "Não responde por nenhum encargo.",
+            "Responde apenas pelos encargos trabalhistas.",
+            "Não tem dever de fiscalizar."
+          ], correct: 0 },
+        { q: "O que é a fiscalização do contrato e quem a exerce?",
+          options: [
+            "Atividade de acompanhamento e verificação da execução, exercida por representante da Administração especialmente designado, que registra ocorrências e adota providências.",
+            "É exercida pelo próprio contratado.",
+            "É exercida pelo Tribunal de Contas.",
+            "Não é necessária."
+          ], correct: 0 },
+        { q: "O que é o recebimento do objeto do contrato?",
+          options: [
+            "Ato pelo qual a Administração atesta a entrega do objeto, podendo ser provisório (conferência inicial) ou definitivo (aceitação final).",
+            "É a assinatura do contrato.",
+            "É a liquidação da despesa.",
+            "É a publicação do extrato."
+          ], correct: 0 },
+        { q: "O que é a garantia contratual e qual seu limite?",
+          options: [
+            "Garantia para assegurar o cumprimento das obrigações, podendo ser caução em dinheiro ou títulos, seguro-garantia ou fiança bancária; limite de 5%, podendo chegar a 10% em grande vulto.",
+            "Garantia real sobre imóveis; limite de 20%.",
+            "Apenas fiança bancária; limite de 10%.",
+            "Não há previsão legal."
+          ], correct: 0 },
+        { q: "O que é a cláusula de reajuste?",
+          options: [
+            "Prevê atualização dos preços contratuais após 12 meses, com base em índice de preços, para manter o equilíbrio econômico-financeiro.",
+            "Permite alterar o objeto do contrato.",
+            "Autoriza a rescisão unilateral.",
+            "Define as penalidades."
+          ], correct: 0 },
+        { q: "O que é a cláusula de revisão?",
+          options: [
+            "Prevê revisão dos preços em razão de fatos imprevisíveis ou previsíveis de consequências incalculáveis que alterem o equilíbrio econômico-financeiro.",
+            "Atualiza os preços anualmente pelo IPCA.",
+            "Permite a prorrogação do prazo.",
+            "Estabelece a garantia contratual."
+          ], correct: 0 },
+        { q: "O que é a teoria da imprevisão?",
+          options: [
+            "Permite a revisão do contrato em razão de acontecimentos externos, estranhos à vontade das partes, imprevisíveis e inevitáveis, que causem desequilíbrio excessivo.",
+            "Permite a rescisão unilateral imediata.",
+            "Aplica-se apenas a contratos de obras.",
+            "Não se aplica aos contratos administrativos."
+          ], correct: 0 },
+        { q: "O que é o fato do príncipe?",
+          options: [
+            "Medida de ordem geral, não relacionada diretamente com o contrato, mas que nele repercute, provocando desequilíbrio (ex.: mudança cambial, instituição de tributo).",
+            "Ação da Administração diretamente relacionada ao contrato.",
+            "Ato do contratado que causa prejuízo.",
+            "Evento natural imprevisível."
+          ], correct: 0 },
+        { q: "O que é o fato da administração?",
+          options: [
+            "Ação da Administração diretamente relacionada ao contrato, que causa desequilíbrio (ex.: atraso no pagamento por prazo superior a 90 dias).",
+            "Medida de ordem geral que repercute no contrato.",
+            "Ato do contratado que causa prejuízo.",
+            "Evento natural imprevisível."
+          ], correct: 0 },
+        { q: "O que é a álea administrativa?",
+          options: [
+            "Risco decorrente de atos ou fatos da Administração que afetam o contrato, como alteração unilateral, fato do príncipe e fato da administração.",
+            "Risco de mercado.",
+            "Risco de caso fortuito e força maior.",
+            "Risco de inadimplência do contratado."
+          ], correct: 0 },
+        { q: "O que é a álea econômica?",
+          options: [
+            "Risco decorrente de acontecimentos externos, imprevisíveis e inevitáveis, que alteram a equação econômico-financeira, autorizando a aplicação da teoria da imprevisão.",
+            "Risco de atos da Administração.",
+            "É a mesma coisa que álea administrativa.",
+            "Risco de variação de preços previsível."
+          ], correct: 0 },
+        { q: "O que é a Parceria Público-Privada (PPP)?",
+          options: [
+            "Contrato administrativo de concessão, nas modalidades patrocinada ou administrativa, com valor superior a R$ 20 milhões e prazo de 5 a 35 anos.",
+            "Contrato de compra de bens comuns.",
+            "Contrato de prestação de serviços sem concessão.",
+            "Contrato de obra pública com prazo de 2 anos."
+          ], correct: 0 },
+        { q: "O que é a concessão patrocinada?",
+          options: [
+            "Concessão de serviços públicos ou de obras públicas em que há, adicionalmente à tarifa cobrada dos usuários, contraprestação pecuniária do parceiro público ao parceiro privado.",
+            "Concessão em que não há tarifa.",
+            "Concessão em que a Administração é a usuária direta.",
+            "É o mesmo que concessão administrativa."
+          ], correct: 0 },
+        { q: "O que é a concessão administrativa?",
+          options: [
+            "Contrato de prestação de serviços em que a Administração Pública é a usuária direta ou indireta, ainda que envolva execução de obra ou fornecimento e instalações de bens.",
+            "Concessão em que há cobrança de tarifa dos usuários.",
+            "É o mesmo que concessão patrocinada.",
+            "É a concessão de serviço público simples."
+          ], correct: 0 },
+        { q: "O que é a Sociedade de Propósito Específico (SPE)?",
+          options: [
+            "Sociedade que deve ser constituída antes da celebração do contrato de PPP, incumbida de implantar e gerir o objeto da parceria, não podendo a Administração Pública ser titular da maioria do capital votante.",
+            "Empresa pública criada para gerir a PPP.",
+            "Organização social.",
+            "Consórcio de empresas públicas."
+          ], correct: 0 },
+        { q: "O que é o contrato de concessão?",
+          options: [
+            "Delega a prestação de serviços públicos ou a execução de obras públicas a particular, por sua conta e risco e por prazo determinado.",
+            "É o contrato de compra de bens.",
+            "É o contrato de prestação de serviços comuns.",
+            "É o contrato de locação de imóveis."
+          ], correct: 0 },
+        { q: "O que é o contrato de gestão?",
+          options: [
+            "Instrumento celebrado entre a Administração Pública e entidades qualificadas como Organização Social para fomento e execução de atividades nas áreas de ensino, pesquisa, meio ambiente, cultura e saúde.",
+            "Celebrado com empresas privadas com fins lucrativos.",
+            "Celebrado com órgãos da administração direta.",
+            "Celebrado com pessoas físicas."
+          ], correct: 0 },
+        { q: "O que é uma Organização Social?",
+          options: [
+            "Qualificação atribuível a pessoa jurídica de direito privado, sem fins lucrativos, cujo objeto social se relacione a atividades dirigidas ao ensino, à pesquisa, ao meio ambiente, à cultura ou à saúde.",
+            "Empresa pública federal.",
+            "Autarquia estadual.",
+            "Fundação pública de direito público."
+          ], correct: 0 },
+        { q: "O que é o convênio?",
+          options: [
+            "Ajuste celebrado pela Administração Pública com entidades particulares sem fins lucrativos ou órgãos públicos, transferindo voluntariamente recursos públicos para execução de atividade de interesse comum.",
+            "É o contrato de compra de bens.",
+            "É a licitação para obras.",
+            "É o contrato de trabalho."
+          ], correct: 0 },
+        { q: "Qual é a principal diferença entre convênio e contrato administrativo?",
+          options: [
+            "No convênio predomina a cooperação para objetivo comum, enquanto no contrato há prestações e interesses contrapostos; o convênio geralmente é celebrado com dispensa de licitação e comporta número superior de partes.",
+            "Não há diferença.",
+            "O convênio é sempre oneroso.",
+            "O contrato é sempre gratuito."
+          ], correct: 0 },
+        { q: "Qual é o marco legal dos convênios no âmbito federal?",
+          options: [
+            "Decreto 6.170/07 (alterado pelo 6.619/08) e Portaria Interministerial 507/11.",
+            "Lei 8.666/93 apenas.",
+            "Lei 14.133/21.",
+            "Decreto 5.450/05."
+          ], correct: 0 },
+        { q: "O que é o Plano de Trabalho de um convênio?",
+          options: [
+            "Documento que detalha a execução do convênio, contendo identificação do objeto, metas, etapas, plano de aplicação dos recursos, cronograma de desembolso e previsão de início e fim da execução.",
+            "É o contrato de repasse.",
+            "É o parecer jurídico do convênio.",
+            "É a prestação de contas final."
+          ], correct: 0 },
+        { q: "O que é o SICONV?",
+          options: [
+            "Sistema de Gestão de Convênios e Contratos de Repasse, que registra celebração, liberação de recursos, acompanhamento da execução e prestação de contas.",
+            "Sistema de cadastro de fornecedores.",
+            "Sistema de compras governamentais.",
+            "Sistema de controle de obras."
+          ], correct: 0 },
+        { q: "Quais são as vedações para a celebração de convênios?",
+          options: [
+            "Com entes federativos para valores inferiores a R$ 100.000,00; com entidades privadas cujos dirigentes sejam membros de Poder ou servidores do órgão concedente e parentes; entre órgãos federais (usar termo de cooperação); com inadimplentes; com pessoas físicas ou entidades com fins lucrativos.",
+            "Nenhuma vedação legal.",
+            "Apenas com pessoas físicas.",
+            "Apenas com entidades com fins lucrativos."
+          ], correct: 0 },
+        { q: "O que é a contrapartida em um convênio?",
+          options: [
+            "Parcela de recursos financeiros, bens ou serviços que a entidade convenente deve apresentar para complementar os recursos transferidos pela Administração Pública.",
+            "É a devolução dos recursos não utilizados.",
+            "É o valor da multa por inadimplência.",
+            "É a taxa de administração do concedente."
+          ], correct: 0 },
+        { q: "Como devem ser movimentados os recursos financeiros recebidos por convênio?",
+          options: [
+            "Em conta bancária específica, com pagamentos exclusivamente mediante crédito na conta bancária de titularidade dos fornecedores e prestadores, e com transferência das informações ao SIAFI e ao Portal de Convênios.",
+            "Em conta pessoal do dirigente da entidade.",
+            "Em espécie, com recibo simples.",
+            "Diretamente no caixa da entidade."
+          ], correct: 0 },
+        { q: "O que acontece se a entidade não utilizar os recursos financeiros recebidos imediatamente?",
+          options: [
+            "Devem ser aplicados em cadernetas de poupança de instituição financeira oficial (se a previsão de uso for igual ou superior a um mês) ou em fundo de aplicação financeira de curto prazo ou operação de mercado aberto lastreada em títulos da dívida pública (se a utilização ocorrer em prazos menores que um mês).",
+            "Devem ser devolvidos imediatamente.",
+            "Podem ser usados para qualquer finalidade.",
+            "Podem ser emprestados a terceiros."
+          ], correct: 0 },
+        { q: "Qual é o prazo para prestação de contas de um convênio?",
+          options: [
+            "O prazo máximo é de trinta dias contados do término da vigência do convênio ou do último pagamento efetuado, quando este ocorrer em data anterior àquela do encerramento da vigência.",
+            "60 dias após o término da vigência.",
+            "90 dias após o último pagamento.",
+            "Não há prazo definido."
+          ], correct: 0 },
+        { q: "O que acontece se a prestação de contas não for encaminhada no prazo estabelecido?",
+          options: [
+            "O concedente estabelecerá o prazo máximo de trinta dias para sua apresentação ou recolhimento dos recursos, incluídos os rendimentos da aplicação no mercado financeiro, atualizados monetariamente e acrescidos de juros de mora. Findo esse novo prazo, registrará a inadimplência no SICONV e comunicará o fato ao órgão competente para instauração de tomada de contas especial.",
+            "A entidade é automaticamente multada em 50%.",
+            "O convênio é prorrogado automaticamente.",
+            "Nada acontece."
+          ], correct: 0 },
+        { q: "O que é a tomada de contas especial?",
+          options: [
+            "Instrumento de que dispõe a Administração Pública para ressarcir-se de eventuais prejuízos que lhe forem causados, sendo o processo revestido de rito próprio e somente instaurado depois de esgotadas as medidas administrativas para reparação do dano.",
+            "É a prestação de contas regular.",
+            "É o processo de licitação para convênios.",
+            "É a auditoria anual da entidade."
+          ], correct: 0 },
+        { q: "Qual é a diferença entre convênio e contrato de repasse?",
+          options: [
+            "O contrato de repasse difere da transferência por convênio apenas pelo fato de a transferência ao destinatário final ser feita por intermédio de uma instituição financeira considerada mais apta a lidar com a gestão do recurso e acompanhar sua devida aplicação no âmbito daquele programa.",
+            "O contrato de repasse não envolve recursos públicos.",
+            "O convênio é celebrado apenas com empresas.",
+            "São institutos idênticos."
+          ], correct: 0 },
+        { q: "O que é o termo de cooperação?",
+          options: [
+            "Instrumento utilizado para a celebração de convênios entre órgãos e entidades da Administração Pública federal, conforme vedação do Decreto 6.170/07 para a celebração de convênios entre esses entes.",
+            "É o mesmo que contrato de repasse.",
+            "É utilizado para parcerias com organizações sociais.",
+            "É a licitação para convênios."
+          ], correct: 0 },
+        { q: "O que é o termo de fomento?",
+          options: [
+            "Instrumento previsto na Lei 13.019/2014 (MROSC) para a transferência de recursos a organização da sociedade civil para a execução de projetos concebidos por ela, com definição de metas de interesse público.",
+            "Instrumento da Lei 8.666/93 para convênios.",
+            "É o contrato de gestão.",
+            "É o termo de parceria da Lei 9.790/99."
+          ], correct: 0 },
+        { q: "O que é o termo de colaboração?",
+          options: [
+            "Instrumento previsto na Lei 13.019/2014 (MROSC) para a transferência de recursos a organização da sociedade civil para a execução de projetos concebidos pela Administração Pública, com definição de metas de interesse público.",
+            "Instrumento da Lei 8.666/93 para convênios.",
+            "É o contrato de repasse.",
+            "É o termo de fomento."
+          ], correct: 0 },
+        { q: "O que é o acordo de cooperação?",
+          options: [
+            "Instrumento previsto na Lei 13.019/2014 (MROSC) para a celebração de parcerias sem transferência de recursos financeiros, visando a cooperação entre a Administração Pública e organizações da sociedade civil.",
+            "É o convênio federal.",
+            "É o contrato de gestão.",
+            "É a licitação para parcerias."
+          ], correct: 0 },
+        { q: "Qual é a principal diferença entre o regime da Lei 8.666/93 e o regime da Lei 13.019/2014 (MROSC) para parcerias com organizações da sociedade civil?",
+          options: [
+            "A Lei 8.666/93 trata de convênios de forma geral, enquanto a Lei 13.019/2014 (MROSC) estabelece um regime específico para parcerias entre a Administração Pública e organizações da sociedade civil, com regras próprias de seleção, execução e prestação de contas, baseadas no princípio da gestão democrática e participativa.",
+            "Não há diferença.",
+            "A Lei 8.666/93 é mais específica para organizações sociais.",
+            "A MROSC revogou a Lei 8.666/93."
+          ], correct: 0 },
+        { q: "O que é o chamamento público no âmbito do MROSC?",
+          options: [
+            "Procedimento destinado a selecionar organizações da sociedade civil para firmar parceria com a Administração Pública, garantindo a observância dos princípios da isonomia, da legalidade, da impessoalidade, da moralidade, da igualdade, da publicidade, da probidade administrativa, da vinculação ao instrumento convocatório, do julgamento objetivo e dos que lhes são correlatos.",
+            "É a licitação para compra de bens.",
+            "É o convite para empresas participarem de pregão.",
+            "É a publicação do edital de concorrência."
+          ], correct: 0 },
+        { q: "Quais são as fases do chamamento público no MROSC?",
+          options: [
+            "Preparatória, divulgação, apresentação e julgamento das propostas, homologação e adjudicação.",
+            "Apenas divulgação e julgamento.",
+            "Habilitação, julgamento, homologação e adjudicação.",
+            "Publicação, lances e adjudicação."
+          ], correct: 0 },
+        { q: "O que é a prestação de contas no âmbito do MROSC?",
+          options: [
+            "Procedimento pelo qual a organização da sociedade civil parceira apresenta à Administração Pública os documentos e informações necessários para comprovar a correta aplicação dos recursos transferidos e o cumprimento do objeto da parceria.",
+            "É a entrega do relatório de atividades.",
+            "É a auditoria do Tribunal de Contas.",
+            "É a fiscalização do contrato."
+          ], correct: 0 },
+        { q: "O que é a Lei n. 14.133/2021 e qual sua relação com a Lei n. 8.666/93?",
+          options: [
+            "É a nova Lei de Licitações e Contratos Administrativos, que substitui a Lei 8.666/93, a Lei 10.520/02 e o RDC; durante a transição, as duas leis coexistiram até a revogação definitiva da 8.666/93.",
+            "É a lei que revogou imediatamente a Lei 8.666/93, sem período de transição.",
+            "É a lei que trata exclusivamente de convênios.",
+            "É a lei que criou o pregão eletrônico."
+          ], correct: 0 },
+        { q: "Quais são as modalidades de licitação previstas na Lei n. 14.133/2021?",
+          options: [
+            "Pregão, concorrência, concurso, leilão e diálogo competitivo.",
+            "Concorrência, tomada de preços, convite, concurso e leilão.",
+            "Pregão, tomada de preços, convite e concurso.",
+            "Concorrência, leilão e diálogo competitivo apenas."
+          ], correct: 0 },
+        { q: "Qual é o prazo mínimo de divulgação do edital no PNCP para o pregão e a concorrência?",
+          options: [
+            "O prazo mínimo é de 8 dias úteis para o pregão e 10 dias úteis para a concorrência, contados da divulgação no PNCP.",
+            "5 dias úteis para ambos.",
+            "15 dias corridos para ambos.",
+            "10 dias úteis para o pregão e 5 para concorrência."
+          ], correct: 0 },
+        { q: "O que é o Portal Nacional de Contratações Públicas (PNCP)?",
+          options: [
+            "Sistema oficial de divulgação e transparência das contratações públicas no Brasil, instituído pela Lei 14.133/2021, que centraliza a publicação de editais, contratos, atas de registro de preços e outros documentos.",
+            "É o sistema de cadastro de fornecedores.",
+            "É o diário oficial da União.",
+            "É uma plataforma privada de compras."
+          ], correct: 0 },
+        { q: "O que é a contratação integrada?",
+          options: [
+            "Regime de execução de obras e serviços de engenharia em que o contratado é responsável pela elaboração do projeto básico e executivo e pela execução da obra.",
+            "É a contratação de serviços comuns com preço fixo.",
+            "É a contratação de pessoal por tempo determinado.",
+            "É a compra de bens de consumo imediato."
+          ], correct: 0 },
+        { q: "O que é a ata de registro de preços?",
+          options: [
+            "Documento que registra os preços de bens e serviços para contratações futuras, após a realização de licitação, permitindo que a Administração contrate fornecedores registrados de forma mais célere.",
+            "É o contrato de adesão para compras públicas.",
+            "É a lista de fornecedores inidôneos.",
+            "É o edital de licitação."
+          ], correct: 0 },
+        { q: "O que é o contrato de eficiência?",
+          options: [
+            "Contrato administrativo em que a remuneração do contratado é fixada com base na economia gerada para a Administração Pública, a partir da implementação de medidas de eficiência.",
+            "Contrato de fornecimento de energia elétrica.",
+            "Contrato de prestação de serviços de limpeza.",
+            "Contrato de obras públicas."
+          ], correct: 0 },
+        { q: "O que é a matriz de riscos?",
+          options: [
+            "Documento que define a alocação de riscos entre a Administração e o contratado, identificando os riscos de cada parte e as consequências de sua ocorrência, dando segurança jurídica e evitando conflitos durante a execução do contrato.",
+            "É o cronograma físico-financeiro da obra.",
+            "É o plano de fiscalização do contrato.",
+            "É a garantia contratual."
+          ], correct: 0 }
+      ];
+
+      // ----------------------------------------------------------------
+      // ESTADO DA APLICAÇÃO
+      // ----------------------------------------------------------------
+      let currentIndex = 0;
+      let userAnswers = new Array(questions.length).fill(null); // guarda o índice da alternativa escolhida (0-3)
+      let confirmed = new Array(questions.length).fill(false);  // se a questão já foi confirmada
+      let correctCount = 0;
+      let wrongCount = 0;
+
+      // elementos DOM
+      const questionText = document.getElementById('questionText');
+      const optionsContainer = document.getElementById('optionsContainer');
+      const feedbackArea = document.getElementById('feedbackArea');
+      const feedbackMessage = document.getElementById('feedbackMessage');
+      const confirmBtn = document.getElementById('confirmBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const prevBtn = document.getElementById('prevBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const counterText = document.getElementById('counterText');
+      const progressFill = document.getElementById('progressFill');
+      const statsDisplay = document.getElementById('statsDisplay');
+
+      // ----------------------------------------------------------------
+      // RENDERIZAÇÃO
+      // ----------------------------------------------------------------
+      function renderQuestion() {
+        const q = questions[currentIndex];
+        questionText.textContent = `${currentIndex + 1}. ${q.q}`;
+
+        // Limpa opções
+        optionsContainer.innerHTML = '';
+
+        // Cria as opções
+        q.options.forEach((optText, idx) => {
+          const label = document.createElement('label');
+          label.className = 'option';
+
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = 'question';
+          radio.value = idx;
+          radio.checked = (userAnswers[currentIndex] === idx);
+          radio.disabled = confirmed[currentIndex];
+
+          // Se já confirmou, adiciona classes de certo/errado
+          if (confirmed[currentIndex]) {
+            if (idx === q.correct) {
+              label.classList.add('correct');
+            } else if (idx === userAnswers[currentIndex] && idx !== q.correct) {
+              label.classList.add('incorrect');
+            }
+          } else {
+            if (userAnswers[currentIndex] === idx) {
+              label.classList.add('selected');
+            }
+          }
+
+          radio.addEventListener('change', (e) => {
+            if (confirmed[currentIndex]) return;
+            userAnswers[currentIndex] = idx;
+            // Atualiza classes visuais
+            document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+            label.classList.add('selected');
+            confirmBtn.disabled = false;
+            // limpa feedback anterior
+            feedbackArea.className = 'feedback';
+            feedbackMessage.textContent = 'Clique em “Confirmar resposta” para verificar.';
+            feedbackArea.querySelector('.feedback-icon').textContent = '📌';
+          });
+
+          label.appendChild(radio);
+          label.appendChild(document.createTextNode(' ' + optText));
+          optionsContainer.appendChild(label);
+        });
+
+        // Atualiza botões
+        confirmBtn.disabled = confirmed[currentIndex] || userAnswers[currentIndex] === null;
+        nextBtn.disabled = (currentIndex === questions.length - 1) || !confirmed[currentIndex];
+        prevBtn.disabled = currentIndex === 0;
+
+        // Atualiza feedback se já confirmado
+        if (confirmed[currentIndex]) {
+          const isCorrect = userAnswers[currentIndex] === q.correct;
+          if (isCorrect) {
+            feedbackArea.className = 'feedback correct-fb';
+            feedbackMessage.textContent = `✅ Resposta correta!`;
+            feedbackArea.querySelector('.feedback-icon').textContent = '✅';
+          } else {
+            feedbackArea.className = 'feedback incorrect-fb';
+            const correctLetter = String.fromCharCode(65 + q.correct);
+            feedbackMessage.textContent = `❌ Resposta incorreta. A alternativa correta é a letra ${correctLetter}.`;
+            feedbackArea.querySelector('.feedback-icon').textContent = '❌';
+          }
+        } else {
+          feedbackArea.className = 'feedback';
+          feedbackMessage.textContent = userAnswers[currentIndex] !== null
+            ? 'Clique em “Confirmar resposta” para verificar.'
+            : 'Escolha uma alternativa e clique em “Confirmar”.';
+          feedbackArea.querySelector('.feedback-icon').textContent = '📌';
+        }
+
+        // Atualiza contador e barra
+        counterText.textContent = `Questão ${currentIndex + 1} de ${questions.length}`;
+        progressFill.style.width = `${((currentIndex + 1) / questions.length) * 100}%`;
+
+        // Atualiza estatísticas
+        updateStats();
+      }
+
+      function updateStats() {
+        // Recalcula acertos e erros com base nas confirmadas
+        let acertos = 0, erros = 0;
+        for (let i = 0; i < questions.length; i++) {
+          if (confirmed[i]) {
+            if (userAnswers[i] === questions[i].correct) {
+              acertos++;
+            } else {
+              erros++;
+            }
+          }
+        }
+        correctCount = acertos;
+        wrongCount = erros;
+        statsDisplay.textContent = `✅ ${acertos} acertos · ❌ ${erros} erros`;
+      }
+
+      // ----------------------------------------------------------------
+      // AÇÕES
+      // ----------------------------------------------------------------
+      function confirmAnswer() {
+        if (confirmed[currentIndex]) return;
+        if (userAnswers[currentIndex] === null) return;
+
+        confirmed[currentIndex] = true;
+        const q = questions[currentIndex];
+        const isCorrect = userAnswers[currentIndex] === q.correct;
+
+        // Marca visualmente as opções
+        const labels = optionsContainer.querySelectorAll('.option');
+        labels.forEach((label, idx) => {
+          const radio = label.querySelector('input[type="radio"]');
+          radio.disabled = true;
+          if (idx === q.correct) {
+            label.classList.add('correct');
+          } else if (idx === userAnswers[currentIndex] && !isCorrect) {
+            label.classList.add('incorrect');
+          }
+          label.classList.remove('selected');
+        });
+
+        // Atualiza feedback
+        if (isCorrect) {
+          feedbackArea.className = 'feedback correct-fb';
+          feedbackMessage.textContent = '✅ Resposta correta!';
+          feedbackArea.querySelector('.feedback-icon').textContent = '✅';
+        } else {
+          const correctLetter = String.fromCharCode(65 + q.correct);
+          feedbackArea.className = 'feedback incorrect-fb';
+          feedbackMessage.textContent = `❌ Resposta incorreta. A alternativa correta é a letra ${correctLetter}.`;
+          feedbackArea.querySelector('.feedback-icon').textContent = '❌';
+        }
+
+        // Atualiza botões
+        confirmBtn.disabled = true;
+        nextBtn.disabled = (currentIndex === questions.length - 1);
+        updateStats();
+      }
+
+      function goToNext() {
+        if (currentIndex < questions.length - 1) {
+          currentIndex++;
+          renderQuestion();
+        }
+      }
+
+      function goToPrev() {
+        if (currentIndex > 0) {
+          currentIndex--;
+          renderQuestion();
+        }
+      }
+
+      function resetAll() {
+        if (!confirm('Tem certeza que deseja reiniciar o banco de questões? Todas as respostas serão apagadas.')) return;
+        currentIndex = 0;
+        userAnswers = new Array(questions.length).fill(null);
+        confirmed = new Array(questions.length).fill(false);
+        correctCount = 0;
+        wrongCount = 0;
+        renderQuestion();
+      }
+
+      // ----------------------------------------------------------------
+      // EVENT LISTENERS
+      // ----------------------------------------------------------------
+      confirmBtn.addEventListener('click', confirmAnswer);
+      nextBtn.addEventListener('click', goToNext);
+      prevBtn.addEventListener('click', goToPrev);
+      resetBtn.addEventListener('click', resetAll);
+
+      // Inicializa
+      renderQuestion();
+    })();
+  </script>
+</body>
+</html>
+```
