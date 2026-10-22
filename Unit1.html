@@ -65,6 +65,44 @@
       font-size: 0.9rem;
     }
 
+    /* NOVO: seletor de questões */
+    .selector-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .selector-wrapper label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #164465;
+    }
+
+    #questionSelector {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #0a3d62;
+      background: #e6f0f9;
+      border: 1.5px solid #b3cee2;
+      border-radius: 40px;
+      padding: 0.35rem 0.9rem;
+      cursor: pointer;
+      max-width: 260px;
+      transition: 0.15s;
+    }
+
+    #questionSelector:hover {
+      background: #d0e2f0;
+      border-color: #6d9ec9;
+    }
+
+    #questionSelector:focus {
+      outline: none;
+      border-color: #1e6f9f;
+      box-shadow: 0 0 0 2px rgba(30, 111, 159, 0.2);
+    }
+
     .progress-bar {
       width: 100%;
       height: 8px;
@@ -318,6 +356,9 @@
         padding: 0.7rem 1.2rem;
         font-size: 0.9rem;
       }
+      #questionSelector {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
@@ -326,7 +367,11 @@
     <h1>📚 Licitação, Contratos e Convênios</h1>
     <div class="subtitle">
       <span>200 questões · múltipla escolha</span>
-      <span id="statsDisplay" class="stats">✅ 0 acertos · 0 erros</span>
+      <div class="selector-wrapper">
+        <label for="questionSelector">Ir para questão:</label>
+        <select id="questionSelector"></select>
+        <span id="statsDisplay" class="stats">✅ 0 acertos · 0 erros</span>
+      </div>
     </div>
 
     <!-- barra de progresso -->
@@ -444,7 +489,7 @@
             "45 dias, 30 dias e 5 dias úteis.",
             "45 dias, 15 dias e 5 dias úteis.",
             "30 dias, 30 dias e 10 dias úteis."
-          ], correct: 2 },  // concorrência 45 (empreitada integral) => 45; tomada demais casos 15; convite 5 úteis
+          ], correct: 2 },
         { q: "Quais são as modalidades de licitação previstas na Lei n. 8.666/93?",
           options: [
             "Pregão, concorrência, tomada de preços, convite, concurso e leilão.",
@@ -1767,8 +1812,8 @@
       // ESTADO DA APLICAÇÃO
       // ----------------------------------------------------------------
       let currentIndex = 0;
-      let userAnswers = new Array(questions.length).fill(null); // guarda o índice da alternativa escolhida (0-3)
-      let confirmed = new Array(questions.length).fill(false);  // se a questão já foi confirmada
+      let userAnswers = new Array(questions.length).fill(null);
+      let confirmed = new Array(questions.length).fill(false);
       let correctCount = 0;
       let wrongCount = 0;
 
@@ -1784,6 +1829,34 @@
       const counterText = document.getElementById('counterText');
       const progressFill = document.getElementById('progressFill');
       const statsDisplay = document.getElementById('statsDisplay');
+      const questionSelector = document.getElementById('questionSelector');
+
+      // ----------------------------------------------------------------
+      // SELETOR DE QUESTÕES
+      // ----------------------------------------------------------------
+      function populateQuestionSelector() {
+        questionSelector.innerHTML = '';
+        questions.forEach((q, idx) => {
+          const option = document.createElement('option');
+          option.value = idx;
+          let prefix = '';
+          if (confirmed[idx]) {
+            prefix = userAnswers[idx] === q.correct ? '✅ ' : '❌ ';
+          } else if (userAnswers[idx] !== null) {
+            prefix = '📝 ';
+          }
+          option.textContent = `${prefix}Questão ${idx + 1}`;
+          if (idx === currentIndex) option.selected = true;
+          questionSelector.appendChild(option);
+        });
+      }
+
+      function goToQuestion(index) {
+        if (index >= 0 && index < questions.length) {
+          currentIndex = index;
+          renderQuestion();
+        }
+      }
 
       // ----------------------------------------------------------------
       // RENDERIZAÇÃO
@@ -1792,10 +1865,8 @@
         const q = questions[currentIndex];
         questionText.textContent = `${currentIndex + 1}. ${q.q}`;
 
-        // Limpa opções
         optionsContainer.innerHTML = '';
 
-        // Cria as opções
         q.options.forEach((optText, idx) => {
           const label = document.createElement('label');
           label.className = 'option';
@@ -1807,7 +1878,6 @@
           radio.checked = (userAnswers[currentIndex] === idx);
           radio.disabled = confirmed[currentIndex];
 
-          // Se já confirmou, adiciona classes de certo/errado
           if (confirmed[currentIndex]) {
             if (idx === q.correct) {
               label.classList.add('correct');
@@ -1820,17 +1890,16 @@
             }
           }
 
-          radio.addEventListener('change', (e) => {
+          radio.addEventListener('change', () => {
             if (confirmed[currentIndex]) return;
             userAnswers[currentIndex] = idx;
-            // Atualiza classes visuais
             document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
             label.classList.add('selected');
             confirmBtn.disabled = false;
-            // limpa feedback anterior
             feedbackArea.className = 'feedback';
             feedbackMessage.textContent = 'Clique em “Confirmar resposta” para verificar.';
             feedbackArea.querySelector('.feedback-icon').textContent = '📌';
+            populateQuestionSelector();
           });
 
           label.appendChild(radio);
@@ -1838,12 +1907,10 @@
           optionsContainer.appendChild(label);
         });
 
-        // Atualiza botões
         confirmBtn.disabled = confirmed[currentIndex] || userAnswers[currentIndex] === null;
         nextBtn.disabled = (currentIndex === questions.length - 1) || !confirmed[currentIndex];
         prevBtn.disabled = currentIndex === 0;
 
-        // Atualiza feedback se já confirmado
         if (confirmed[currentIndex]) {
           const isCorrect = userAnswers[currentIndex] === q.correct;
           if (isCorrect) {
@@ -1864,24 +1931,19 @@
           feedbackArea.querySelector('.feedback-icon').textContent = '📌';
         }
 
-        // Atualiza contador e barra
         counterText.textContent = `Questão ${currentIndex + 1} de ${questions.length}`;
         progressFill.style.width = `${((currentIndex + 1) / questions.length) * 100}%`;
 
-        // Atualiza estatísticas
         updateStats();
+        populateQuestionSelector();
       }
 
       function updateStats() {
-        // Recalcula acertos e erros com base nas confirmadas
         let acertos = 0, erros = 0;
         for (let i = 0; i < questions.length; i++) {
           if (confirmed[i]) {
-            if (userAnswers[i] === questions[i].correct) {
-              acertos++;
-            } else {
-              erros++;
-            }
+            if (userAnswers[i] === questions[i].correct) acertos++;
+            else erros++;
           }
         }
         correctCount = acertos;
@@ -1900,20 +1962,15 @@
         const q = questions[currentIndex];
         const isCorrect = userAnswers[currentIndex] === q.correct;
 
-        // Marca visualmente as opções
         const labels = optionsContainer.querySelectorAll('.option');
         labels.forEach((label, idx) => {
           const radio = label.querySelector('input[type="radio"]');
           radio.disabled = true;
-          if (idx === q.correct) {
-            label.classList.add('correct');
-          } else if (idx === userAnswers[currentIndex] && !isCorrect) {
-            label.classList.add('incorrect');
-          }
+          if (idx === q.correct) label.classList.add('correct');
+          else if (idx === userAnswers[currentIndex] && !isCorrect) label.classList.add('incorrect');
           label.classList.remove('selected');
         });
 
-        // Atualiza feedback
         if (isCorrect) {
           feedbackArea.className = 'feedback correct-fb';
           feedbackMessage.textContent = '✅ Resposta correta!';
@@ -1925,10 +1982,10 @@
           feedbackArea.querySelector('.feedback-icon').textContent = '❌';
         }
 
-        // Atualiza botões
         confirmBtn.disabled = true;
         nextBtn.disabled = (currentIndex === questions.length - 1);
         updateStats();
+        populateQuestionSelector();
       }
 
       function goToNext() {
@@ -1962,6 +2019,9 @@
       nextBtn.addEventListener('click', goToNext);
       prevBtn.addEventListener('click', goToPrev);
       resetBtn.addEventListener('click', resetAll);
+      questionSelector.addEventListener('change', (e) => {
+        goToQuestion(parseInt(e.target.value, 10));
+      });
 
       // Inicializa
       renderQuestion();
@@ -1969,4 +2029,3 @@
   </script>
 </body>
 </html>
-```
